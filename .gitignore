@@ -26,3 +26,9 @@ Thumbs.db
 
 # Railway
 .railway
+
+# Documentation and DB
+*.sql
+*_GUIDE.md
+DATABASE_SETUP.md
+guide.md
