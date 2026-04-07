@@ -134,7 +134,7 @@ export default function DailyQuests() {
         </div>
       </motion.div>
 
-      {questData?.can_refresh && (
+      {(questData?.can_refresh || questData?.day_completed) && (
         <motion.div
           className="day-completed-banner"
           initial={{ opacity: 0, scale: 0.9 }}

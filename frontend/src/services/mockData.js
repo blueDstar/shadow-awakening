@@ -97,7 +97,7 @@ export const MOCK_QUESTS = {
       stat_rewards: '{"mental_resilience": 1}', status: 'pending', quest_date: new Date().toISOString().slice(0, 10), completed_at: null,
     },
   ],
-  total: 6, completed: 2, failed: 0, day_completed: false,
+  total: 6, completed: 2, failed: 0, day_completed: false, can_refresh: false,
   quest_date: new Date().toISOString().slice(0, 10),
 };
 
