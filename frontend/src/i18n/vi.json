@@ -38,15 +38,17 @@
     "penalty": "Nhiệm Vụ Trừng Phạt",
     "special": "Nhiệm Vụ Đặc Biệt",
     "breakthrough": "Nhiệm Vụ Đột Phá",
-    "complete": "Hoàn Thành",
-    "failed": "Thất Bại",
+    "complete": "Đã hoàn thành",
+    "failed": "Hợp thất bại",
     "pending": "Đang chờ",
     "difficulty": "Độ khó",
     "expReward": "EXP thưởng",
-    "noQuests": "Chưa có nhiệm vụ. Hãy bắt đầu ngày mới!",
-    "allCompleted": "Tất cả nhiệm vụ đã hoàn thành! Tuyệt vời!",
-    "markComplete": "Đánh dấu hoàn thành",
-    "markFailed": "Đánh dấu thất bại"
+    "noQuests": "Không tìm thấy thử thách nào trong bóng tối.",
+    "allCompleted": "Tất cả thử thách hiện tại đã bị chinh phục! Bạn đang mạnh mẽ hơn.",
+    "markComplete": "Xác nhận hoàn thành",
+    "markFailed": "Đánh dấu thất bại",
+    "refreshQuests": "Triệu hồi thử thách mới",
+    "refreshing": "Đang triệu hồi..."
   },
   "stats": {
     "title": "Chỉ Số Nhân Vật",

@@ -55,6 +55,48 @@ async def get_today_quests(
     }
 
 
+@router.post("/refresh")
+async def refresh_quests(
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Generate 3 more quests if all current ones are completed."""
+    from app.services.quest_engine import refresh_daily_quests
+    
+    quests = await refresh_daily_quests(db, user)
+    
+    total = len(quests)
+    completed = sum(1 for q in quests if q.status == "completed")
+    failed = sum(1 for q in quests if q.status == "failed")
+    
+    return {
+        "quests": [
+            {
+                "id": str(q.id),
+                "title_vi": q.title_vi,
+                "title_en": q.title_en,
+                "description_vi": q.description_vi,
+                "description_en": q.description_en,
+                "quest_type": q.quest_type,
+                "category": q.category,
+                "difficulty": q.difficulty,
+                "exp_reward": q.exp_reward,
+                "stat_rewards": q.stat_rewards,
+                "status": q.status,
+                "quest_date": str(q.quest_date),
+                "completed_at": q.completed_at.isoformat() if q.completed_at else None,
+                "fail_reason": q.fail_reason,
+            }
+            for q in quests
+        ],
+        "total": total,
+        "completed": completed,
+        "failed": failed,
+        "day_completed": completed == total and total > 0,
+        "quest_date": str(date.today()),
+    }
+
+
 @router.post("/{quest_id}/complete")
 async def complete_quest(
     quest_id: str,

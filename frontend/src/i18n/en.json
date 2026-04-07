@@ -38,15 +38,17 @@
     "penalty": "Penalty Quest",
     "special": "Special Quest",
     "breakthrough": "Breakthrough Quest",
-    "complete": "Complete",
+    "complete": "Completed",
     "failed": "Failed",
     "pending": "Pending",
     "difficulty": "Difficulty",
     "expReward": "EXP Reward",
-    "noQuests": "No quests yet. Start a new day!",
-    "allCompleted": "All quests completed! Amazing!",
+    "noQuests": "No trials found in the shadows.",
+    "allCompleted": "All current trials overcome! You are growing stronger.",
     "markComplete": "Mark as Complete",
-    "markFailed": "Mark as Failed"
+    "markFailed": "Mark as Failed",
+    "refreshQuests": "Call for New Trials",
+    "refreshing": "Summoning..."
   },
   "stats": {
     "title": "Character Stats",

@@ -70,7 +70,7 @@
 .day-completed-banner {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: $space-3;
   padding: $space-4 $space-6;
   background: linear-gradient(135deg, rgba($success, 0.1), rgba($neon-purple, 0.1));
@@ -81,9 +81,44 @@
   font-weight: $font-weight-semibold;
   font-size: $font-lg;
 
+  @include responsive($bp-sm) {
+    flex-direction: column;
+    text-align: center;
+    gap: $space-4;
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
   &__icon {
     font-size: 1.5rem;
     animation: flameFlicker 1.5s infinite;
+  }
+
+  &__refresh-btn {
+    @include button-primary;
+    background: linear-gradient(135deg, $neon-purple, $purple-700);
+    padding: $space-2 $space-5;
+    font-size: $font-sm;
+    box-shadow: 0 0 15px rgba($neon-purple, 0.3);
+
+    &:hover {
+      box-shadow: 0 0 25px rgba($neon-purple, 0.5);
+      transform: translateY(-2px);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    @include responsive($bp-sm) {
+      width: 100%;
+    }
   }
 }
 

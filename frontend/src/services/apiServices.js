@@ -48,6 +48,7 @@ export const questService = USE_MOCK ? {
   getToday: () => api.get('/api/quests/today'),
   complete: (questId) => api.post(`/api/quests/${questId}/complete`),
   fail: (questId, reason) => api.post(`/api/quests/${questId}/fail`, null, { params: { fail_reason: reason } }),
+  refresh: () => api.post('/api/quests/refresh'),
   getHistory: (limit = 30) => api.get('/api/quests/history', { params: { limit } }),
 };
 

@@ -414,6 +414,82 @@ async def generate_daily_quests(db: AsyncSession, user: User) -> List[DailyQuest
     return daily_quests
 
 
+async def refresh_daily_quests(db: AsyncSession, user: User) -> List[DailyQuest]:
+    """Generates 3 additional quests after daily completion."""
+    today = date.today()
+    
+    # Verify all today's quests are completed
+    existing = await db.execute(
+        select(DailyQuest).where(
+            and_(DailyQuest.user_id == user.id, DailyQuest.quest_date == today)
+        )
+    )
+    existing_quests = existing.scalars().all()
+    
+    if not existing_quests:
+        # If no quests exist, just generate regular daily quests
+        return await generate_daily_quests(db, user)
+        
+    all_completed = all(q.status == "completed" for q in existing_quests)
+    if not all_completed:
+        # Not all quests are completed, return existing ones
+        return existing_quests
+        
+    # User is pushing for more! Support them with 3 new quests
+    character = await _get_character(db, user.id)
+    level = character.level if character else 1
+    
+    # Calculate slightly higher difficulty for refreshed quests
+    completion_rate = await _get_7d_completion_rate(db, user.id)
+    difficulty = min(10, int(existing_quests[0].difficulty * 1.1) + 1)
+    
+    # Analyze recently completed categories
+    completed_cats = [q.category for q in existing_quests if q.status == "completed"]
+    dominant_cat = random.choice(completed_cats) if completed_cats else "wisdom"
+    
+    new_quest_data = []
+    
+    # 1. First two quests: related to the dominant category (academic/wisdom focus)
+    related_templates = QUEST_TEMPLATES.get(dominant_cat, QUEST_TEMPLATES["wisdom"])
+    selected_related = random.sample(related_templates, min(2, len(related_templates)))
+    for template in selected_related:
+        new_quest_data.append(_build_quest_from_template(template, difficulty, level, "side"))
+        
+    # 2. Third quest: always fitness (per user request)
+    fitness_templates = QUEST_TEMPLATES.get("fitness", [])
+    if fitness_templates:
+        template = random.choice(fitness_templates)
+        new_quest_data.append(_build_quest_from_template(template, difficulty, level, "side"))
+        
+    # Save new quests
+    new_entities = []
+    for q in new_quest_data:
+        exp = calculate_quest_exp(difficulty, q["quest_type"], level)
+        # Increase reward slightly for extra push
+        exp = int(exp * 1.2)
+        
+        dq = DailyQuest(
+            id=uuid.uuid4(),
+            user_id=user.id,
+            quest_date=today,
+            title_vi=f"[Tăng cường] {q['title_vi']}",
+            title_en=f"[Extra] {q['title_en']}",
+            description_vi=q.get("desc_vi", ""),
+            description_en=q.get("desc_en", ""),
+            quest_type="special",  # Marked as special to distinguish from daily
+            category=q["category"],
+            difficulty=difficulty,
+            exp_reward=exp,
+            stat_rewards=json.dumps(q.get("stat_rewards", {})),
+            status="pending",
+        )
+        db.add(dq)
+        new_entities.append(dq)
+        
+    await db.flush()
+    return existing_quests + new_entities
+
+
 def _generate_main_quests(
     weak_stats: List[str], difficulty: int, level: int, profile, count: int
 ) -> List[dict]:

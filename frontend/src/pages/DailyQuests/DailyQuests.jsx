@@ -22,6 +22,7 @@ export default function DailyQuests() {
   const [loading, setLoading] = useState(true);
   const [completing, setCompleting] = useState(null);
   const [levelUp, setLevelUp] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => { loadQuests(); }, []);
 
@@ -33,6 +34,18 @@ export default function DailyQuests() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const res = await questService.refresh();
+      setQuestData(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setRefreshing(false);
     }
   };
 
@@ -127,8 +140,18 @@ export default function DailyQuests() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <span className="day-completed-banner__icon">🔥</span>
-          <span>{t('quests.allCompleted')}</span>
+          <div className="day-completed-banner__info">
+            <span className="day-completed-banner__icon">🔥</span>
+            <span>{t('quests.allCompleted')}</span>
+          </div>
+          
+          <button 
+            className="day-completed-banner__refresh-btn"
+            onClick={handleRefresh}
+            disabled={refreshing}
+          >
+            {refreshing ? '⌛' : '🔄'} {t('quests.refreshQuests')}
+          </button>
         </motion.div>
       )}
 
