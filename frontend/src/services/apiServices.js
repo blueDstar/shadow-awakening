@@ -11,6 +11,11 @@ function mockRes(data) {
   return Promise.resolve({ data });
 }
 
+function getLocalDate() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 export const authService = USE_MOCK ? {
   register: () => mockRes({ access_token: MOCK_TOKEN, token_type: 'bearer', user_id: MOCK_USER.id }),
   login: () => mockRes({ access_token: MOCK_TOKEN, token_type: 'bearer', user_id: MOCK_USER.id }),
@@ -45,10 +50,10 @@ export const questService = USE_MOCK ? {
   },
   getHistory: () => mockRes([]),
 } : {
-  getToday: () => api.get('/api/quests/today', { params: { client_date: new Date().toISOString().slice(0, 10) } }),
+  getToday: () => api.get('/api/quests/today', { params: { client_date: getLocalDate() } }),
   complete: (questId) => api.post(`/api/quests/${questId}/complete`),
   fail: (questId, reason) => api.post(`/api/quests/${questId}/fail`, null, { params: { fail_reason: reason } }),
-  refresh: () => api.post('/api/quests/refresh', null, { params: { client_date: new Date().toISOString().slice(0, 10) } }),
+  refresh: () => api.post('/api/quests/refresh', null, { params: { client_date: getLocalDate() } }),
   getHistory: (limit = 30) => api.get('/api/quests/history', { params: { limit } }),
 };
 
@@ -76,7 +81,7 @@ export const breakthroughService = USE_MOCK ? {
 
 export const journalService = USE_MOCK ? {
   getAll: () => mockRes(MOCK_JOURNAL),
-  create: (data) => { MOCK_JOURNAL.unshift({ ...data, id: 'j' + Date.now(), reflection_date: new Date().toISOString().slice(0, 10), created_at: new Date().toISOString() }); return mockRes({ id: 'new', status: 'created' }); },
+  create: (data) => { MOCK_JOURNAL.unshift({ ...data, id: 'j' + Date.now(), reflection_date: getLocalDate(), created_at: new Date().toISOString() }); return mockRes({ id: 'new', status: 'created' }); },
   getByDate: () => mockRes(null),
 } : {
   getAll: (limit = 30) => api.get('/api/journal', { params: { limit } }),
