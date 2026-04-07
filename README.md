@@ -4,6 +4,8 @@
 
 App gamification phát triển bản thân theo phong cách dark fantasy — biến cuộc sống thường ngày thành hành trình thăng cấp.
 
+**🌐 Link trải nghiệm (Demo):** [https://shadow-awakening-sepia.vercel.app/](https://shadow-awakening-sepia.vercel.app/)
+
 ## 🛠️ Tech Stack
 
 | Layer | Công nghệ |
