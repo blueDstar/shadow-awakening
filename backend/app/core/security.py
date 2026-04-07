@@ -1,4 +1,6 @@
-import bcrypt
+import hashlib
+import hmac
+import os
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
@@ -6,23 +8,36 @@ from app.core.config import settings
 
 
 def hash_password(password: str) -> str:
-    # bcrypt.hashpw expects bytes, returns bytes
-    # We encode the password and decode the result to store as a string
-    pwd_bytes = password.encode('utf-8')
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(pwd_bytes, salt)
-    return hashed.decode('utf-8')
+    """Hash a password using SHA256 with a salt."""
+    salt = os.urandom(16).hex()
+    pwd_hash = hashlib.pbkdf2_hmac(
+        'sha256', 
+        password.encode('utf-8'), 
+        salt.encode('utf-8'), 
+        100000
+    ).hex()
+    return f"pbkdf2_sha256$100000${salt}${pwd_hash}"
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a plain password against a hashed one."""
     try:
-        # bcrypt.checkpw expects (password_bytes, hashed_bytes)
-        # We strip the hash to avoid issues with trailing spaces in some DBs
-        pwd_bytes = plain_password.encode('utf-8')
-        hash_bytes = hashed_password.strip().encode('utf-8')
+        if not hashed_password or "$" not in hashed_password:
+            return False
+            
+        algorithm, iterations, salt, pwd_hash = hashed_password.split('$')
         
-        return bcrypt.checkpw(pwd_bytes, hash_bytes)
+        if algorithm != "pbkdf2_sha256":
+            return False
+            
+        new_hash = hashlib.pbkdf2_hmac(
+            'sha256', 
+            plain_password.encode('utf-8'), 
+            salt.encode('utf-8'), 
+            int(iterations)
+        ).hex()
+        
+        return hmac.compare_digest(new_hash, pwd_hash)
     except Exception as e:
         print(f"Error verifying password: {e}")
         return False

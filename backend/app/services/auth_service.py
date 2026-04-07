@@ -3,7 +3,7 @@ import uuid
 import json
 from datetime import date
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, or_
 
 from app.models import User, UserProfile, Character, StatCap, UserStat, Streak, UserSettings
 from app.core.security import hash_password, verify_password, create_access_token
@@ -14,14 +14,14 @@ STREAK_TYPES = ["overall", "reading", "english", "fitness", "deep_work", "journa
 
 async def register_user(db: AsyncSession, username: str, email: str, password: str) -> dict:
     """Register a new user with default character, stats, streaks."""
-    # Check existing
-    existing = await db.execute(select(User).where(User.username == username))
-    if existing.scalar_one_or_none():
-        raise ValueError("Username already taken")
+    # Normalize
+    username = username.strip().lower()
+    email = email.strip().lower()
     
-    existing_email = await db.execute(select(User).where(User.email == email))
-    if existing_email.scalar_one_or_none():
-        raise ValueError("Email already registered")
+    # Check existing
+    existing = await db.execute(select(User).where(or_(User.username == username, User.email == email)))
+    if existing.scalar_one_or_none():
+        raise ValueError("Username or Email already registered")
     
     # Create user
     user = User(
@@ -104,9 +104,19 @@ async def register_user(db: AsyncSession, username: str, email: str, password: s
     }
 
 
-async def login_user(db: AsyncSession, username: str, password: str) -> dict:
-    """Authenticate and return JWT token."""
-    result = await db.execute(select(User).where(User.username == username))
+async def login_user(db: AsyncSession, identifier: str, password: str) -> dict:
+    """Authenticate via username or email and return JWT token."""
+    identifier = identifier.strip().lower()
+    
+    # Search by username OR email
+    result = await db.execute(
+        select(User).where(
+            or_(
+                User.username == identifier,
+                User.email == identifier
+            )
+        )
+    )
     user = result.scalar_one_or_none()
     
     if not user or not verify_password(password, user.password_hash):
