@@ -4,7 +4,11 @@ from contextlib import asynccontextmanager
 
 from app.core.config import settings
 from app.db.database import init_db
-from app.routes import auth, quests, dashboard, stats, streaks, breakthrough, journal, settings as settings_routes
+from app.routes import (
+    auth, quests, dashboard, stats, streaks, 
+    breakthrough, journal, settings as settings_routes,
+    skills, challenges, rewards
+)
 
 
 @asynccontextmanager
@@ -42,6 +46,9 @@ app.include_router(streaks.router)
 app.include_router(breakthrough.router)
 app.include_router(journal.router)
 app.include_router(settings_routes.router)
+app.include_router(skills.router)
+app.include_router(challenges.router)
+app.include_router(rewards.router)
 
 
 @app.get("/")

@@ -92,3 +92,21 @@ export const settingsService = USE_MOCK ? {
   updateLanguage: (language) => api.put('/api/settings/language', null, { params: { language } }),
   updateTimezone: (tz) => api.put('/api/settings/timezone', null, { params: { tz } }),
 };
+
+export const skillService = USE_MOCK ? {
+  getAll: () => mockRes([]),
+} : {
+  getAll: () => api.get('/api/skills'),
+};
+
+export const challengeService = USE_MOCK ? {
+  getAll: () => mockRes([]),
+} : {
+  getAll: () => api.get('/api/challenges'),
+};
+
+export const rewardService = USE_MOCK ? {
+  getAll: () => mockRes([]),
+} : {
+  getAll: () => api.get('/api/rewards'),
+};
