@@ -1,0 +1,28 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+  background: $bg-primary;
+
+  &__content {
+    flex: 1;
+    margin-left: $sidebar-width;
+    padding: $space-8;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+    @include custom-scrollbar;
+
+    @include responsive($bp-lg) {
+      margin-left: $sidebar-collapsed;
+      padding: $space-4;
+    }
+
+    @include responsive($bp-md) {
+      margin-left: 0;
+      padding: $space-4;
+    }
+  }
+}

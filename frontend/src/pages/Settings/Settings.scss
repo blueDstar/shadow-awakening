@@ -1,0 +1,61 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.settings-page {
+  max-width: 700px;
+  margin: 0 auto;
+
+  h1 {
+    font-size: $font-3xl;
+    color: $text-primary;
+    margin-bottom: $space-8;
+  }
+}
+
+.settings-section {
+  @include card(false);
+  margin-bottom: $space-6;
+
+  h3 {
+    font-size: $font-lg;
+    color: $text-primary;
+    margin-bottom: $space-4;
+  }
+}
+
+.language-selector {
+  display: flex;
+  gap: $space-3;
+}
+
+.lang-btn {
+  @include button-ghost;
+  padding: $space-3 $space-6;
+  font-size: $font-base;
+
+  &--active {
+    border-color: $neon-purple;
+    background: rgba($neon-purple, 0.15);
+    color: $text-primary;
+    box-shadow: $shadow-glow;
+  }
+}
+
+.account-info {
+  margin-bottom: $space-4;
+  color: $text-secondary;
+  font-size: $font-sm;
+  line-height: 2;
+
+  strong { color: $text-primary; }
+}
+
+.logout-btn {
+  @include button-ghost;
+  color: $danger;
+  border-color: rgba($danger, 0.3);
+
+  &:hover {
+    background: rgba($danger, 0.1);
+  }
+}

@@ -1,0 +1,137 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+@use '../../styles/animations';
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $bg-primary;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba($purple-800, 0.3), transparent 70%);
+    pointer-events: none;
+  }
+}
+
+.login-card {
+  @include card(false);
+  @include glow-border;
+  width: 100%;
+  max-width: 420px;
+  padding: $space-10;
+  position: relative;
+  z-index: 1;
+  animation: pulseGlow 4s ease-in-out infinite;
+
+  &__header {
+    text-align: center;
+    margin-bottom: $space-8;
+  }
+
+  &__icon {
+    font-size: 3rem;
+    margin-bottom: $space-4;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: $font-3xl;
+    @include glow-text($neon-purple);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: $space-2;
+  }
+
+  &__subtitle {
+    color: $text-muted;
+    font-size: $font-sm;
+    letter-spacing: 2px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+
+    label {
+      font-size: $font-sm;
+      color: $text-secondary;
+      font-weight: $font-weight-medium;
+    }
+
+    input {
+      background: rgba($bg-primary, 0.6);
+      border: 1px solid $border-color;
+      border-radius: $radius-md;
+      padding: $space-3 $space-4;
+      color: $text-primary;
+      font-size: $font-base;
+      font-family: $font-family;
+      transition: all $transition-base;
+      outline: none;
+
+      &:focus {
+        border-color: $purple-500;
+        box-shadow: 0 0 15px rgba($purple-500, 0.2);
+      }
+
+      &::placeholder {
+        color: $text-muted;
+      }
+    }
+  }
+
+  &__error {
+    background: rgba($danger, 0.1);
+    border: 1px solid rgba($danger, 0.3);
+    color: $danger;
+    padding: $space-3 $space-4;
+    border-radius: $radius-md;
+    font-size: $font-sm;
+    text-align: center;
+  }
+
+  &__submit {
+    @include button-primary;
+    width: 100%;
+    padding: $space-4;
+    font-size: $font-base;
+    margin-top: $space-2;
+  }
+
+  &__footer {
+    text-align: center;
+    margin-top: $space-6;
+    font-size: $font-sm;
+    color: $text-muted;
+
+    a {
+      color: $neon-purple;
+      text-decoration: none;
+      margin-left: $space-2;
+      font-weight: $font-weight-semibold;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

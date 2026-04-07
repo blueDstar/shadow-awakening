@@ -1,0 +1,171 @@
+@use 'variables' as *;
+
+// === Card Mixin ===
+@mixin card($hover: true) {
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: $space-6;
+  transition: all $transition-base;
+
+  @if $hover {
+    &:hover {
+      border-color: $border-glow;
+      box-shadow: $shadow-glow;
+      transform: translateY(-2px);
+      background: $bg-card-hover;
+    }
+  }
+}
+
+// === Glow Text ===
+@mixin glow-text($color: $neon-purple) {
+  color: $color;
+  text-shadow: 0 0 10px rgba($color, 0.5), 0 0 20px rgba($color, 0.3);
+}
+
+// === Glow Border ===
+@mixin glow-border($color: $purple-500) {
+  border: 1px solid rgba($color, 0.3);
+  box-shadow: 0 0 15px rgba($color, 0.15), inset 0 0 15px rgba($color, 0.05);
+}
+
+// === Glass Effect ===
+@mixin glass($blur: 12px) {
+  background: rgba($bg-card, 0.7);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+}
+
+// === Button Base ===
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  padding: $space-3 $space-6;
+  border-radius: $radius-md;
+  font-weight: $font-weight-semibold;
+  font-size: $font-sm;
+  cursor: pointer;
+  border: none;
+  transition: all $transition-base;
+  text-decoration: none;
+  font-family: $font-family;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// === Primary Button ===
+@mixin button-primary {
+  @include button-base;
+  background: linear-gradient(135deg, $purple-600, $purple-800);
+  color: white;
+  box-shadow: 0 4px 15px rgba($purple-600, 0.3);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, $purple-500, $purple-700);
+    box-shadow: 0 6px 20px rgba($purple-500, 0.4);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+// === Ghost Button ===
+@mixin button-ghost {
+  @include button-base;
+  background: transparent;
+  color: $text-secondary;
+  border: 1px solid $border-color;
+
+  &:hover:not(:disabled) {
+    border-color: $border-glow;
+    color: $text-primary;
+    background: rgba($purple-500, 0.1);
+  }
+}
+
+// === Progress Bar ===
+@mixin progress-bar($height: 8px, $color: $neon-purple) {
+  width: 100%;
+  height: $height;
+  background: rgba($color, 0.15);
+  border-radius: $radius-full;
+  overflow: hidden;
+  position: relative;
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, $color, rgba($color, 0.8));
+    border-radius: $radius-full;
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 30px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(white, 0.3));
+      animation: shimmer 2s infinite;
+    }
+  }
+}
+
+// === Responsive ===
+@mixin responsive($bp) {
+  @media (max-width: $bp) {
+    @content;
+  }
+}
+
+@mixin desktop-only {
+  @media (max-width: $bp-lg) {
+    display: none;
+  }
+}
+
+@mixin mobile-only {
+  @media (min-width: $bp-lg) {
+    display: none;
+  }
+}
+
+// === Scrollbar ===
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: $bg-primary;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $purple-800;
+    border-radius: $radius-full;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: $purple-700;
+  }
+}
+
+// === Text Truncation ===
+@mixin truncate($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,171 @@
+// ================================================
+// SHADOW AWAKENING — Animations
+// Dark Fantasy Visual Effects
+// ================================================
+
+// === Shimmer ===
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+// === Pulse Glow ===
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.6); }
+}
+
+// === Float ===
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+// === Fade In Up ===
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// === Fade In Scale ===
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// === Spin ===
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// === Particle Float ===
+@keyframes particleFloat {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-10vh) scale(1);
+    opacity: 0;
+  }
+}
+
+// === Flame Flicker ===
+@keyframes flameFlicker {
+  0%, 100% {
+    transform: scaleY(1) scaleX(1);
+    filter: brightness(1);
+  }
+  25% {
+    transform: scaleY(1.1) scaleX(0.95);
+    filter: brightness(1.2);
+  }
+  50% {
+    transform: scaleY(0.95) scaleX(1.05);
+    filter: brightness(0.9);
+  }
+  75% {
+    transform: scaleY(1.05) scaleX(0.98);
+    filter: brightness(1.1);
+  }
+}
+
+// === Level Up Flash ===
+@keyframes levelUpFlash {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+    filter: brightness(3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+    filter: brightness(2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+    filter: brightness(1);
+  }
+}
+
+// === Border Glow Pulse ===
+@keyframes borderGlowPulse {
+  0%, 100% {
+    border-color: rgba(139, 92, 246, 0.2);
+  }
+  50% {
+    border-color: rgba(139, 92, 246, 0.5);
+  }
+}
+
+// === Text Reveal ===
+@keyframes textReveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+// === Ring Expand ===
+@keyframes ringExpand {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+    border-width: 4px;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+// === Streak Flame ===
+@keyframes streakFlame {
+  0%, 100% {
+    text-shadow:
+      0 0 10px rgba(180, 74, 255, 0.6),
+      0 0 20px rgba(139, 92, 246, 0.4),
+      0 0 30px rgba(139, 92, 246, 0.2);
+  }
+  50% {
+    text-shadow:
+      0 0 15px rgba(180, 74, 255, 0.8),
+      0 0 30px rgba(139, 92, 246, 0.6),
+      0 0 45px rgba(139, 92, 246, 0.3);
+  }
+}
+
+// === EXP Gain ===
+@keyframes expGain {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(1.3);
+  }
+}

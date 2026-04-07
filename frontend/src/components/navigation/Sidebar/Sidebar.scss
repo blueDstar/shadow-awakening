@@ -1,0 +1,161 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+@use '../../../styles/animations';
+
+.sidebar {
+  width: $sidebar-width;
+  height: 100vh;
+  background: $bg-secondary;
+  border-right: 1px solid $border-color;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: $z-sticky;
+  overflow-y: auto;
+  @include custom-scrollbar;
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-6;
+    border-bottom: 1px solid $border-color;
+
+    &-icon {
+      font-size: 2rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    &-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-title {
+      font-family: $font-display;
+      font-size: $font-xl;
+      font-weight: $font-weight-bold;
+      @include glow-text($neon-purple);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    &-subtitle {
+      font-size: $font-xs;
+      color: $text-muted;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+  }
+
+  &__nav {
+    flex: 1;
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3 $space-4;
+    border-radius: $radius-md;
+    color: $text-secondary;
+    text-decoration: none;
+    font-size: $font-sm;
+    font-weight: $font-weight-medium;
+    transition: all $transition-base;
+    position: relative;
+    overflow: hidden;
+
+    &-icon {
+      font-size: 1.2rem;
+      width: 28px;
+      text-align: center;
+    }
+
+    &-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at left center, rgba($purple-500, 0.15), transparent 70%);
+      opacity: 0;
+      transition: opacity $transition-base;
+      pointer-events: none;
+    }
+
+    &:hover {
+      color: $text-primary;
+      background: rgba($purple-500, 0.08);
+
+      .sidebar__link-glow {
+        opacity: 1;
+      }
+    }
+
+    &--active {
+      color: $text-primary;
+      background: rgba($purple-500, 0.12);
+      border-left: 3px solid $neon-purple;
+
+      .sidebar__link-glow {
+        opacity: 1;
+      }
+
+      .sidebar__link-icon {
+        filter: drop-shadow(0 0 6px rgba($neon-purple, 0.6));
+      }
+    }
+  }
+
+  &__footer {
+    padding: $space-4;
+    border-top: 1px solid $border-color;
+  }
+
+  &__logout {
+    @include button-ghost;
+    width: 100%;
+    justify-content: flex-start;
+    gap: $space-3;
+    color: $text-muted;
+    padding: $space-3 $space-4;
+
+    &:hover {
+      color: $danger;
+      border-color: rgba($danger, 0.3);
+    }
+  }
+
+  @include responsive($bp-lg) {
+    width: $sidebar-collapsed;
+
+    .sidebar__logo-text,
+    .sidebar__link-text,
+    .sidebar__logout span:last-child {
+      display: none;
+    }
+
+    .sidebar__logo {
+      justify-content: center;
+      padding: $space-4;
+    }
+
+    .sidebar__link {
+      justify-content: center;
+      padding: $space-3;
+    }
+  }
+
+  @include responsive($bp-md) {
+    transform: translateX(-100%);
+    width: $sidebar-width;
+
+    &.open {
+      transform: translateX(0);
+    }
+  }
+}

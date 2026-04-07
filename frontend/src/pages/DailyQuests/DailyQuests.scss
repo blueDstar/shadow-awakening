@@ -1,0 +1,272 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+@use '../../styles/animations';
+
+.quests-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: $text-muted;
+  gap: $space-4;
+
+  .quests-loading__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid $border-color;
+    border-top-color: $neon-purple;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+.daily-quests {
+  max-width: $content-max-width;
+  margin: 0 auto;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $space-8;
+
+    h1 {
+      font-size: $font-3xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+    }
+  }
+
+  &__progress {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    color: $text-secondary;
+    font-size: $font-sm;
+
+    &-bar {
+      width: 120px;
+      height: 6px;
+      background: rgba($neon-purple, 0.1);
+      border-radius: $radius-full;
+      overflow: hidden;
+    }
+
+    &-fill {
+      height: 100%;
+      background: linear-gradient(90deg, $neon-purple, $neon-green);
+      border-radius: $radius-full;
+    }
+  }
+}
+
+.day-completed-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-3;
+  padding: $space-4 $space-6;
+  background: linear-gradient(135deg, rgba($success, 0.1), rgba($neon-purple, 0.1));
+  border: 1px solid rgba($success, 0.3);
+  border-radius: $radius-lg;
+  margin-bottom: $space-6;
+  color: $success;
+  font-weight: $font-weight-semibold;
+  font-size: $font-lg;
+
+  &__icon {
+    font-size: 1.5rem;
+    animation: flameFlicker 1.5s infinite;
+  }
+}
+
+.quest-group {
+  margin-bottom: $space-6;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3 $space-4;
+    border-left: 3px solid;
+    margin-bottom: $space-3;
+  }
+
+  &__icon { font-size: 1.2rem; }
+
+  &__title {
+    font-size: $font-lg;
+    color: $text-primary;
+    font-weight: $font-weight-semibold;
+    flex: 1;
+  }
+
+  &__count {
+    background: rgba($neon-purple, 0.15);
+    color: $neon-purple;
+    padding: $space-1 $space-3;
+    border-radius: $radius-full;
+    font-size: $font-xs;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.quest-card {
+  @include card(true);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: $space-4;
+  margin-bottom: $space-3;
+  border-left: 3px solid var(--quest-color);
+  padding: $space-5;
+
+  &--completed {
+    opacity: 0.7;
+    border-left-color: $success !important;
+
+    .quest-card__title {
+      text-decoration: line-through;
+      color: $text-muted;
+    }
+  }
+
+  &--failed {
+    opacity: 0.6;
+    border-left-color: $danger !important;
+  }
+
+  &__content { flex: 1; }
+
+  &__title {
+    font-size: $font-base;
+    color: $text-primary;
+    font-weight: $font-weight-semibold;
+    margin-bottom: $space-2;
+  }
+
+  &__desc {
+    font-size: $font-sm;
+    color: $text-muted;
+    margin-bottom: $space-3;
+    line-height: 1.5;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+    font-size: $font-xs;
+  }
+
+  &__exp {
+    color: $neon-gold;
+    font-weight: $font-weight-semibold;
+    background: rgba($neon-gold, 0.1);
+    padding: $space-1 $space-2;
+    border-radius: $radius-sm;
+  }
+
+  &__difficulty {
+    color: $text-muted;
+  }
+
+  &__stat-reward {
+    color: $neon-purple;
+    background: rgba($neon-purple, 0.1);
+    padding: $space-1 $space-2;
+    border-radius: $radius-sm;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  &__complete-btn {
+    @include button-primary;
+    font-size: $font-sm;
+    padding: $space-2 $space-4;
+  }
+
+  &__fail-btn {
+    @include button-ghost;
+    padding: $space-2;
+    font-size: $font-sm;
+    color: $danger;
+    border-color: rgba($danger, 0.3);
+
+    &:hover { background: rgba($danger, 0.1); }
+  }
+
+  &__status {
+    font-size: $font-sm;
+    padding: $space-2 $space-4;
+    border-radius: $radius-md;
+
+    &--completed {
+      color: $success;
+      background: rgba($success, 0.1);
+    }
+
+    &--failed {
+      color: $danger;
+      background: rgba($danger, 0.1);
+    }
+  }
+
+  @include responsive($bp-md) {
+    flex-direction: column;
+  }
+}
+
+.no-quests {
+  text-align: center;
+  padding: $space-16;
+  color: $text-muted;
+
+  &__icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: $space-4;
+  }
+}
+
+// Level Up Overlay
+.level-up-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: $z-modal;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__content {
+    text-align: center;
+    color: $text-primary;
+  }
+
+  &__icon {
+    font-size: 5rem;
+    animation: float 1s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba($neon-gold, 0.8));
+  }
+
+  h2 {
+    font-family: $font-display;
+    font-size: $font-5xl;
+    @include glow-text($neon-gold);
+    letter-spacing: 5px;
+    margin: $space-4 0;
+    animation: streakFlame 1s infinite;
+  }
+
+  p {
+    font-size: $font-xl;
+    color: $text-secondary;
+  }
+}

@@ -1,0 +1,42 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.skills-page {
+  max-width: $content-max-width;
+  margin: 0 auto;
+  h1 { font-size: $font-3xl; color: $text-primary; margin-bottom: $space-8; }
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: $space-5;
+}
+
+.skill-card {
+  @include card(true);
+  text-align: center;
+  padding: $space-8 $space-5;
+
+  &--locked {
+    opacity: 0.6;
+    filter: grayscale(0.4);
+  }
+
+  &__icon { font-size: 2.5rem; margin-bottom: $space-3; }
+  &__name { font-size: $font-lg; color: $text-primary; font-weight: $font-weight-semibold; margin-bottom: $space-2; }
+  &__condition { font-size: $font-xs; color: $text-muted; margin-bottom: $space-3; }
+  &__status {
+    display: inline-block;
+    font-size: $font-xs;
+    padding: $space-1 $space-3;
+    border-radius: $radius-full;
+    background: rgba($text-muted, 0.1);
+    color: $text-muted;
+
+    &.unlocked {
+      background: rgba($success, 0.1);
+      color: $success;
+    }
+  }
+}

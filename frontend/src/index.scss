@@ -1,0 +1,89 @@
+@use './styles/variables' as *;
+@use './styles/mixins' as *;
+@use './styles/animations';
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
+// === Reset ===
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: $font-family;
+  background: $bg-primary;
+  color: $text-primary;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+// === Scrollbar ===
+body {
+  @include custom-scrollbar;
+}
+
+// === Links ===
+a {
+  color: $neon-purple;
+  text-decoration: none;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $purple-400;
+  }
+}
+
+// === Selection ===
+::selection {
+  background: rgba($purple-500, 0.3);
+  color: $text-primary;
+}
+
+// === Images ===
+img {
+  max-width: 100%;
+  display: block;
+}
+
+// === App Loading ===
+.app-loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: $bg-primary;
+  color: $text-muted;
+  gap: $space-4;
+
+  &__spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid $border-color;
+    border-top-color: $neon-purple;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    font-family: $font-display;
+    font-size: $font-lg;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    @include glow-text($neon-purple);
+  }
+}
+
+// === Global Utility ===
+.glow-text {
+  @include glow-text($neon-purple);
+}

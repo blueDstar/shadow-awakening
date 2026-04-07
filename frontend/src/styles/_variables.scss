@@ -1,0 +1,140 @@
+// ================================================
+// SHADOW AWAKENING — Design System Variables
+// Dark Fantasy / Anime-inspired Premium UI
+// ================================================
+
+// === Colors ===
+$bg-primary: #0a0a0f;
+$bg-secondary: #12121a;
+$bg-card: #1a1a2e;
+$bg-card-hover: #222240;
+$bg-elevated: #16162a;
+$bg-modal: rgba(10, 10, 15, 0.95);
+
+// Purple palette
+$purple-50: #f5f3ff;
+$purple-100: #ede9fe;
+$purple-200: #ddd6fe;
+$purple-300: #c4b5fd;
+$purple-400: #a78bfa;
+$purple-500: #8b5cf6;
+$purple-600: #7c3aed;
+$purple-700: #6d28d9;
+$purple-800: #5b21b6;
+$purple-900: #4c1d95;
+
+// Neon accents
+$neon-purple: #b44aff;
+$neon-blue: #4a9eff;
+$neon-violet: #9945ff;
+$neon-pink: #ff4a8d;
+$neon-green: #4aff9f;
+$neon-gold: #ffd700;
+
+// Semantic
+$text-primary: #e8e6f0;
+$text-secondary: #9d9bb0;
+$text-muted: #6b6980;
+$text-accent: $neon-purple;
+
+$border-color: rgba(139, 92, 246, 0.15);
+$border-glow: rgba(139, 92, 246, 0.3);
+
+$success: #4aff9f;
+$warning: #ffd700;
+$danger: #ff4a6a;
+$info: #4a9eff;
+
+// Quest type colors
+$quest-main: $neon-purple;
+$quest-side: $neon-blue;
+$quest-habit: $neon-green;
+$quest-challenge: $neon-gold;
+$quest-penalty: $danger;
+$quest-special: $neon-pink;
+$quest-breakthrough: linear-gradient(135deg, $neon-purple, $neon-gold);
+
+// Stat colors
+$stat-wisdom: #a78bfa;
+$stat-confidence: #f59e0b;
+$stat-strength: #ef4444;
+$stat-discipline: #3b82f6;
+$stat-focus: #06b6d4;
+$stat-stamina: #22c55e;
+$stat-knowledge: #8b5cf6;
+$stat-consistency: #14b8a6;
+$stat-mental: #ec4899;
+$stat-social: #f97316;
+
+// === Typography ===
+$font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+$font-display: 'Orbitron', 'Inter', sans-serif;
+
+$font-xs: 0.75rem;
+$font-sm: 0.875rem;
+$font-base: 1rem;
+$font-lg: 1.125rem;
+$font-xl: 1.25rem;
+$font-2xl: 1.5rem;
+$font-3xl: 1.875rem;
+$font-4xl: 2.25rem;
+$font-5xl: 3rem;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// === Spacing ===
+$space-1: 0.25rem;
+$space-2: 0.5rem;
+$space-3: 0.75rem;
+$space-4: 1rem;
+$space-5: 1.25rem;
+$space-6: 1.5rem;
+$space-8: 2rem;
+$space-10: 2.5rem;
+$space-12: 3rem;
+$space-16: 4rem;
+
+// === Border Radius ===
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 16px;
+$radius-xl: 20px;
+$radius-full: 9999px;
+
+// === Shadows ===
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+$shadow-glow: 0 0 20px rgba(139, 92, 246, 0.3);
+$shadow-glow-lg: 0 0 40px rgba(139, 92, 246, 0.4);
+$shadow-glow-intense: 0 0 60px rgba(180, 74, 255, 0.5);
+
+// === Transitions ===
+$transition-fast: 150ms ease;
+$transition-base: 250ms ease;
+$transition-slow: 400ms ease;
+$transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// === Z-index ===
+$z-dropdown: 100;
+$z-sticky: 200;
+$z-modal-backdrop: 300;
+$z-modal: 400;
+$z-toast: 500;
+$z-tooltip: 600;
+
+// === Layout ===
+$sidebar-width: 280px;
+$sidebar-collapsed: 72px;
+$topbar-height: 64px;
+$content-max-width: 1400px;
+
+// === Breakpoints ===
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+$bp-2xl: 1536px;

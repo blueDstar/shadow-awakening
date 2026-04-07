@@ -1,0 +1,80 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+@use '../../styles/animations';
+
+.stats-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; color: $text-muted; gap: $space-4;
+  .spinner { width: 40px; height: 40px; border: 3px solid $border-color; border-top-color: $neon-purple; border-radius: 50%; animation: spin 1s linear infinite; }
+}
+
+.character-stats {
+  max-width: 900px;
+  margin: 0 auto;
+
+  h1 { font-size: $font-3xl; color: $text-primary; margin-bottom: $space-6; }
+  h2 { font-size: $font-xl; color: $text-secondary; margin: $space-8 0 $space-4; border-bottom: 1px solid $border-color; padding-bottom: $space-2; }
+}
+
+.bt-alert {
+  background: linear-gradient(135deg, rgba($neon-purple, 0.1), rgba($neon-gold, 0.1));
+  border: 1px solid rgba($neon-gold, 0.3);
+  padding: $space-4;
+  border-radius: $radius-md;
+  color: $neon-gold;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $space-6;
+  text-align: center;
+  animation: pulseGlow 2s infinite;
+}
+
+.stats-info {
+  display: flex;
+  gap: $space-6;
+  color: $text-muted;
+  font-size: $font-sm;
+  margin-bottom: $space-6;
+}
+
+.stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+.stat-row {
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    margin-bottom: $space-2;
+  }
+
+  &__icon { font-size: 1.3rem; width: 28px; text-align: center; }
+  &__name { flex: 1; color: $text-secondary; font-size: $font-base; font-weight: $font-weight-medium; }
+  &__value { font-family: $font-display; font-size: $font-base; font-weight: $font-weight-bold; }
+
+  &__bar-bg {
+    width: 100%;
+    height: 10px;
+    background: rgba(white, 0.05);
+    border-radius: $radius-full;
+    overflow: hidden;
+  }
+
+  &__bar-fill {
+    height: 100%;
+    border-radius: $radius-full;
+    box-shadow: 0 0 10px currentColor;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to bottom, rgba(white, 0.25), transparent);
+      border-radius: $radius-full $radius-full 0 0;
+    }
+  }
+}

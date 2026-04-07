@@ -1,0 +1,179 @@
+{
+  "app": {
+    "name": "Shadow Awakening",
+    "subtitle": "Awakening System"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "quests": "Daily Quests",
+    "stats": "Character Stats",
+    "skills": "Skills",
+    "planner": "Time Planner",
+    "learning": "Learning & Discovery",
+    "fitness": "Fitness",
+    "challenges": "Challenges",
+    "journal": "Journal",
+    "rewards": "Rewards",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcomeBack": "Welcome back",
+    "resetCountdown": "Quest refresh in",
+    "todayStatus": "Today's Status",
+    "dayConquered": "Day Conquered",
+    "questsCompleted": "Quests completed",
+    "currentStreak": "Current streak",
+    "bestStreak": "Best streak",
+    "level": "Level",
+    "phase": "Phase",
+    "statCap": "Stat cap"
+  },
+  "quests": {
+    "title": "Daily Quests",
+    "main": "Main Quest",
+    "side": "Side Quest",
+    "habit": "Habit Quest",
+    "challenge": "Challenge Quest",
+    "penalty": "Penalty Quest",
+    "special": "Special Quest",
+    "breakthrough": "Breakthrough Quest",
+    "complete": "Complete",
+    "failed": "Failed",
+    "pending": "Pending",
+    "difficulty": "Difficulty",
+    "expReward": "EXP Reward",
+    "noQuests": "No quests yet. Start a new day!",
+    "allCompleted": "All quests completed! Amazing!",
+    "markComplete": "Mark as Complete",
+    "markFailed": "Mark as Failed"
+  },
+  "stats": {
+    "title": "Character Stats",
+    "wisdom": "Wisdom",
+    "confidence": "Confidence",
+    "strength": "Strength",
+    "discipline": "Discipline",
+    "focus": "Focus",
+    "stamina": "Stamina",
+    "knowledge": "Knowledge",
+    "consistency": "Consistency",
+    "mental_resilience": "Mental Resilience",
+    "social_courage": "Social Courage",
+    "cap": "Cap",
+    "breakthroughAvailable": "Breakthrough Quest is ready!"
+  },
+  "skills": {
+    "title": "Skills & Unlocks",
+    "focusMode": "Focus Mode",
+    "researchMode": "Research Mode",
+    "shadowStreak": "Shadow Streak",
+    "eliteChain": "Elite Chain",
+    "breakthroughTrial": "Breakthrough Trial",
+    "insightVision": "Insight Vision",
+    "disciplineLock": "Discipline Lock",
+    "recoveryProtocol": "Recovery Protocol",
+    "locked": "Locked",
+    "unlocked": "Unlocked"
+  },
+  "streak": {
+    "title": "Streaks",
+    "current": "Current Streak",
+    "best": "Best Streak",
+    "overall": "Overall",
+    "reading": "Reading",
+    "english": "English",
+    "fitness": "Fitness",
+    "deep_work": "Deep Work",
+    "journal": "Journal",
+    "research": "Research",
+    "days": "days"
+  },
+  "journal": {
+    "title": "Daily Journal",
+    "content": "Content",
+    "mood": "Mood",
+    "insights": "Today's insights",
+    "successReasons": "Success reasons",
+    "failReasons": "Failure reasons",
+    "save": "Save journal",
+    "placeholder": "Write your thoughts, feelings, and lessons today...",
+    "moods": {
+      "great": "Great",
+      "good": "Good",
+      "neutral": "Neutral",
+      "bad": "Bad",
+      "terrible": "Terrible"
+    }
+  },
+  "challenges": {
+    "title": "Challenges",
+    "active": "Active",
+    "completed": "Completed",
+    "available": "Available"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "timezone": "Timezone",
+    "difficulty": "Difficulty",
+    "notifications": "Notifications",
+    "account": "Account"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "loginTitle": "Enter the Shadow",
+    "registerTitle": "Create New Account",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "logout": "Logout"
+  },
+  "onboarding": {
+    "title": "Initialize Character",
+    "characterName": "Character Name",
+    "step1": "Basic Info",
+    "step2": "Goals",
+    "step3": "Physical & Focus",
+    "step4": "Interests & Discovery",
+    "next": "Continue",
+    "back": "Back",
+    "finish": "Begin Journey",
+    "longTermGoals": "Long-term goals",
+    "shortTermGoals": "Short-term goals",
+    "fitnessLevel": "Fitness level",
+    "focusCapacity": "Focus capacity",
+    "sleepTime": "Sleep time",
+    "wakeTime": "Wake time",
+    "freeTime": "Daily free time (minutes)"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "exp": "EXP",
+    "level": "Level"
+  },
+  "levelUp": {
+    "title": "LEVEL UP!",
+    "message": "You reached Level {{level}}!",
+    "continue": "Continue fighting"
+  },
+  "breakthrough": {
+    "title": "Breakthrough Quest",
+    "available": "Breakthrough is ready!",
+    "start": "Start Breakthrough",
+    "complete": "Complete Breakthrough",
+    "capIncrease": "Stat cap increased from {{from}} to {{to}}"
+  }
+}

@@ -1,0 +1,24 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.rewards-page { max-width: $content-max-width; margin: 0 auto; h1 { font-size: $font-3xl; color: $text-primary; margin-bottom: $space-8; } }
+
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $space-5;
+}
+
+.reward-card {
+  @include card(true);
+  text-align: center;
+  padding: $space-8 $space-4;
+  border-top: 3px solid var(--rarity-color);
+
+  &--locked { opacity: 0.5; filter: grayscale(0.6); }
+
+  &__icon { font-size: 2.5rem; display: block; margin-bottom: $space-3; }
+  h3 { color: $text-primary; font-size: $font-base; margin-bottom: $space-2; }
+  &__type { font-size: $font-xs; color: $text-muted; display: block; margin-bottom: $space-1; text-transform: uppercase; letter-spacing: 1px; }
+  &__rarity { font-size: $font-xs; font-weight: $font-weight-semibold; text-transform: uppercase; letter-spacing: 1px; }
+}
