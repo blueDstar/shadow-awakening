@@ -17,11 +17,13 @@ router = APIRouter(prefix="/api/quests", tags=["quests"])
 
 @router.get("/today")
 async def get_today_quests(
+    client_date: str = None,
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     """Get or generate today's quests."""
-    quests = await generate_daily_quests(db, user)
+    target_date = date.fromisoformat(client_date) if client_date else date.today()
+    quests = await generate_daily_quests(db, user, target_date)
     
     total = len(quests)
     completed = sum(1 for q in quests if q.status == "completed")
@@ -51,19 +53,22 @@ async def get_today_quests(
         "completed": completed,
         "failed": failed,
         "day_completed": completed == total and total > 0,
-        "quest_date": str(date.today()),
+        "can_refresh": all(q.status != "pending" for q in quests) and total > 0,
+        "quest_date": str(target_date),
     }
 
 
 @router.post("/refresh")
 async def refresh_quests(
+    client_date: str = None,
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     """Generate 3 more quests if all current ones are completed."""
     from app.services.quest_engine import refresh_daily_quests
     
-    quests = await refresh_daily_quests(db, user)
+    target_date = date.fromisoformat(client_date) if client_date else date.today()
+    quests = await refresh_daily_quests(db, user, target_date)
     
     total = len(quests)
     completed = sum(1 for q in quests if q.status == "completed")
@@ -93,7 +98,8 @@ async def refresh_quests(
         "completed": completed,
         "failed": failed,
         "day_completed": completed == total and total > 0,
-        "quest_date": str(date.today()),
+        "can_refresh": all(q.status != "pending" for q in quests) and total > 0,
+        "quest_date": str(target_date),
     }
 
 

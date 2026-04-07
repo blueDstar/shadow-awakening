@@ -134,7 +134,7 @@ export default function DailyQuests() {
         </div>
       </motion.div>
 
-      {questData?.day_completed && (
+      {questData?.can_refresh && (
         <motion.div
           className="day-completed-banner"
           initial={{ opacity: 0, scale: 0.9 }}
@@ -142,7 +142,7 @@ export default function DailyQuests() {
         >
           <div className="day-completed-banner__info">
             <span className="day-completed-banner__icon">🔥</span>
-            <span>{t('quests.allCompleted')}</span>
+            <span>{questData?.day_completed ? t('quests.allCompleted') : t('quests.readyForMore')}</span>
           </div>
           
           <button 

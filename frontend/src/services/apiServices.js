@@ -45,10 +45,10 @@ export const questService = USE_MOCK ? {
   },
   getHistory: () => mockRes([]),
 } : {
-  getToday: () => api.get('/api/quests/today'),
+  getToday: () => api.get('/api/quests/today', { params: { client_date: new Date().toISOString().slice(0, 10) } }),
   complete: (questId) => api.post(`/api/quests/${questId}/complete`),
   fail: (questId, reason) => api.post(`/api/quests/${questId}/fail`, null, { params: { fail_reason: reason } }),
-  refresh: () => api.post('/api/quests/refresh'),
+  refresh: () => api.post('/api/quests/refresh', null, { params: { client_date: new Date().toISOString().slice(0, 10) } }),
   getHistory: (limit = 30) => api.get('/api/quests/history', { params: { limit } }),
 };
 

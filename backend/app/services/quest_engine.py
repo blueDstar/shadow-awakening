@@ -320,9 +320,9 @@ EXTENDED_STATS = ["stamina", "knowledge", "consistency", "mental_resilience", "s
 ALL_STATS = CORE_STATS + EXTENDED_STATS
 
 
-async def generate_daily_quests(db: AsyncSession, user: User) -> List[DailyQuest]:
+async def generate_daily_quests(db: AsyncSession, user: User, target_date: Optional[date] = None) -> List[DailyQuest]:
     """Main quest generation function. Creates daily quests for a user."""
-    today = date.today()
+    today = target_date or date.today()
     
     # Check if quests already generated for today
     existing = await db.execute(
@@ -339,7 +339,7 @@ async def generate_daily_quests(db: AsyncSession, user: User) -> List[DailyQuest
     stats = await _get_stats(db, character.id if character else None)
     stat_cap = await _get_stat_cap(db, character.id if character else None)
     streaks = await _get_streaks(db, user.id)
-    yesterday_quests = await _get_yesterday_quests(db, user.id)
+    yesterday_quests = await _get_yesterday_quests(db, user.id, today)
     profile = await _get_profile(db, user.id)
     
     level = character.level if character else 1
@@ -348,7 +348,7 @@ async def generate_daily_quests(db: AsyncSession, user: User) -> List[DailyQuest
     # Calculate difficulty
     base_diff = calculate_base_difficulty(level, overall_streak)
     fails, successes = await _get_recent_performance(db, user.id)
-    completion_rate = await _get_7d_completion_rate(db, user.id)
+    completion_rate = await _get_7d_completion_rate(db, user.id, today)
     difficulty = apply_dynamic_adjustment(base_diff, fails, successes, completion_rate)
     
     # Identify weak stats
@@ -414,9 +414,9 @@ async def generate_daily_quests(db: AsyncSession, user: User) -> List[DailyQuest
     return daily_quests
 
 
-async def refresh_daily_quests(db: AsyncSession, user: User) -> List[DailyQuest]:
+async def refresh_daily_quests(db: AsyncSession, user: User, target_date: Optional[date] = None) -> List[DailyQuest]:
     """Generates 3 additional quests after daily completion."""
-    today = date.today()
+    today = target_date or date.today()
     
     # Verify all today's quests are completed
     existing = await db.execute(
@@ -428,11 +428,11 @@ async def refresh_daily_quests(db: AsyncSession, user: User) -> List[DailyQuest]
     
     if not existing_quests:
         # If no quests exist, just generate regular daily quests
-        return await generate_daily_quests(db, user)
+        return await generate_daily_quests(db, user, today)
         
-    all_completed = all(q.status == "completed" for q in existing_quests)
-    if not all_completed:
-        # Not all quests are completed, return existing ones
+    any_pending = any(q.status == "pending" for q in existing_quests)
+    if any_pending:
+        # User still has work to do, return existing ones
         return existing_quests
         
     # User is pushing for more! Support them with 3 new quests
@@ -440,7 +440,7 @@ async def refresh_daily_quests(db: AsyncSession, user: User) -> List[DailyQuest]
     level = character.level if character else 1
     
     # Calculate slightly higher difficulty for refreshed quests
-    completion_rate = await _get_7d_completion_rate(db, user.id)
+    completion_rate = await _get_7d_completion_rate(db, user.id, today)
     difficulty = min(10, int(existing_quests[0].difficulty * 1.1) + 1)
     
     # Analyze recently completed categories
@@ -742,8 +742,8 @@ def _get_overall_streak(streaks: List[Streak]) -> int:
     return 0
 
 
-async def _get_yesterday_quests(db: AsyncSession, user_id) -> List[DailyQuest]:
-    yesterday = date.today() - timedelta(days=1)
+async def _get_yesterday_quests(db: AsyncSession, user_id, today: date) -> List[DailyQuest]:
+    yesterday = today - timedelta(days=1)
     result = await db.execute(
         select(DailyQuest).where(
             and_(DailyQuest.user_id == user_id, DailyQuest.quest_date == yesterday)
@@ -785,9 +785,9 @@ async def _get_recent_performance(db: AsyncSession, user_id) -> tuple:
     return consecutive_fails, consecutive_successes
 
 
-async def _get_7d_completion_rate(db: AsyncSession, user_id) -> float:
+async def _get_7d_completion_rate(db: AsyncSession, user_id, today: date) -> float:
     """Get 7-day quest completion rate."""
-    week_ago = date.today() - timedelta(days=7)
+    week_ago = today - timedelta(days=7)
     result = await db.execute(
         select(QuestHistory)
         .where(and_(QuestHistory.user_id == user_id, QuestHistory.quest_date >= week_ago))
