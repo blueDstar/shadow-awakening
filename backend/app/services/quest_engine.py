@@ -72,6 +72,24 @@ QUEST_TEMPLATES = {
             "stat_rewards": {"stamina": 1, "strength": 1},
             "base_n": 10, "param": "n",
         },
+        {
+            "title_vi": "Chạy bộ tại chỗ {n} giây",
+            "title_en": "Jog in place for {n} seconds",
+            "desc_vi": "Chạy bộ tại chỗ với cường độ cao trong {n} giây.",
+            "desc_en": "High-intensity jogging in place for {n} seconds.",
+            "category": "fitness",
+            "stat_rewards": {"stamina": 2, "strength": 1},
+            "base_n": 60, "param": "n",
+        },
+        {
+            "title_vi": "Leo cầu thang {n} tầng",
+            "title_en": "Climb {n} flights of stairs",
+            "desc_vi": "Leo {n} tầng cầu thang để tăng sức bền chân.",
+            "desc_en": "Climb {n} flights of stairs to build leg stamina.",
+            "category": "fitness",
+            "stat_rewards": {"strength": 3, "stamina": 2},
+            "base_n": 3, "param": "n",
+        },
     ],
     "wisdom": [
         {
@@ -118,6 +136,15 @@ QUEST_TEMPLATES = {
             "category": "wisdom",
             "stat_rewards": {"wisdom": 2, "confidence": 1},
             "base_n": 3, "param": "n",
+        },
+        {
+            "title_vi": "Xem 1 video khoa học {n} phút",
+            "title_en": "Watch a {n}-minute science video",
+            "desc_vi": "Xem một video về khoa học/kiến thức và tóm tắt lại.",
+            "desc_en": "Watch a science/educational video and summarize it.",
+            "category": "wisdom",
+            "stat_rewards": {"knowledge": 2, "wisdom": 1},
+            "base_n": 10, "param": "n",
         },
     ],
     "discipline": [
@@ -330,13 +357,23 @@ async def generate_daily_quests(db: AsyncSession, user: User) -> List[DailyQuest
     
     quests = []
     
-    # 1. Main Quests (2-3)
-    quests.extend(_generate_main_quests(weak_stats, difficulty, level, profile, 2))
+    # 1. Mandatory Fitness Quests (at least 2)
+    fitness_templates = QUEST_TEMPLATES.get("fitness", [])
+    if fitness_templates:
+        selected_fitness = random.sample(fitness_templates, min(2, len(fitness_templates)))
+        for template in selected_fitness:
+            quest = _build_quest_from_template(template, difficulty, level, "main")
+            quests.append(quest)
     
-    # 2. Side Quests (1-2)
+    # 2. Main Quests (Remaining up to 3 total main quests)
+    remaining_main = 3 - len(quests)
+    if remaining_main > 0:
+        quests.extend(_generate_main_quests(weak_stats, difficulty, level, profile, remaining_main))
+    
+    # 3. Side Quests (1-2)
     quests.extend(_generate_side_quests(stats, difficulty, level, profile, 1))
     
-    # 3. Habit Quests (2-3)
+    # 4. Habit Quests (2-3)
     quests.extend(_generate_habit_quests(difficulty, level, profile, 2))
     
     # 4. Penalty Quests if yesterday had failures
