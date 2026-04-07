@@ -15,11 +15,17 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    # bcrypt.checkpw expects (password_bytes, hashed_bytes)
-    return bcrypt.checkpw(
-        plain_password.encode('utf-8'),
-        hashed_password.encode('utf-8')
-    )
+    """Verify a plain password against a hashed one."""
+    try:
+        # bcrypt.checkpw expects (password_bytes, hashed_bytes)
+        # We strip the hash to avoid issues with trailing spaces in some DBs
+        pwd_bytes = plain_password.encode('utf-8')
+        hash_bytes = hashed_password.strip().encode('utf-8')
+        
+        return bcrypt.checkpw(pwd_bytes, hash_bytes)
+    except Exception as e:
+        print(f"Error verifying password: {e}")
+        return False
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
