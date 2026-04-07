@@ -31,6 +31,12 @@
     align-items: center;
     margin-bottom: $space-8;
 
+    @include responsive($bp-sm) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $space-4;
+    }
+
     h1 {
       font-size: $font-3xl;
       font-weight: $font-weight-bold;
@@ -263,6 +269,10 @@
     letter-spacing: 5px;
     margin: $space-4 0;
     animation: streakFlame 1s infinite;
+
+    @include responsive($bp-sm) {
+      font-size: $font-3xl;
+    }
   }
 
   p {

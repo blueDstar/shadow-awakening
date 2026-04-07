@@ -15,6 +15,10 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  @include responsive($bp-sm) {
+    font-size: 14px;
+  }
 }
 
 body {
@@ -51,6 +55,7 @@ a {
 // === Images ===
 img {
   max-width: 100%;
+  height: auto;
   display: block;
 }
 

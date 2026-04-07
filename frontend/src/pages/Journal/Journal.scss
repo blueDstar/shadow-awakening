@@ -73,6 +73,10 @@
     @include button-primary;
     align-self: flex-end;
     padding: $space-3 $space-8;
+
+    @include responsive($bp-sm) {
+      width: 100%;
+    }
   }
 }
 

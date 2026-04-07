@@ -47,6 +47,10 @@
     color: $text-primary;
     margin-bottom: $space-2;
 
+    @include responsive($bp-sm) {
+      font-size: $font-2xl;
+    }
+
     .glow-text {
       @include glow-text($neon-purple);
       font-family: $font-display;
@@ -129,6 +133,12 @@
   gap: $space-6;
   margin-bottom: $space-6;
 
+  @include responsive($bp-sm) {
+    flex-direction: column;
+    text-align: center;
+    gap: $space-4;
+  }
+
   &__avatar {
     position: relative;
     width: 80px;
@@ -192,6 +202,13 @@
 
   &__phase, &__cap {
     color: $text-muted;
+  }
+
+  @include responsive($bp-sm) {
+    &__meta {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
   }
 }
 

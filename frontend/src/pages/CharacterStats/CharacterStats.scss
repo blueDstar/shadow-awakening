@@ -32,6 +32,11 @@
   color: $text-muted;
   font-size: $font-sm;
   margin-bottom: $space-6;
+
+  @include responsive($bp-sm) {
+    flex-direction: column;
+    gap: $space-2;
+  }
 }
 
 .stats-list {

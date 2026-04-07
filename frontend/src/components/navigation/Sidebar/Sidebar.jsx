@@ -1,68 +1,60 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext';
-import { motion } from 'framer-motion';
 import './Sidebar.scss';
 
-const navItems = [
-  { path: '/', icon: '⚔️', key: 'dashboard' },
-  { path: '/quests', icon: '📜', key: 'quests' },
-  { path: '/stats', icon: '📊', key: 'stats' },
-  { path: '/skills', icon: '⚡', key: 'skills' },
-  { path: '/challenges', icon: '🏆', key: 'challenges' },
-  { path: '/journal', icon: '📖', key: 'journal' },
-  { path: '/rewards', icon: '💎', key: 'rewards' },
-  { path: '/settings', icon: '⚙️', key: 'settings' },
-];
-
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const { t } = useTranslation();
   const { logout } = useAuth();
-  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const navLinks = [
+    { path: '/', icon: '🏰', label: t('nav.dashboard') },
+    { path: '/quests', icon: '📜', label: t('nav.quests') },
+    { path: '/stats', icon: '📊', label: t('nav.stats') },
+    { path: '/skills', icon: '✨', label: t('nav.skills') },
+    { path: '/challenges', icon: '⚔️', label: t('nav.challenges') },
+    { path: '/rewards', icon: '🏆', label: t('nav.rewards') },
+    { path: '/journal', icon: '📔', label: t('nav.journal') },
+    { path: '/settings', icon: '⚙️', label: t('nav.settings') },
+  ];
 
   return (
-    <motion.aside
-      className="sidebar"
-      initial={{ x: -280 }}
-      animate={{ x: 0 }}
-      transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-    >
-      <div className="sidebar__logo">
-        <div className="sidebar__logo-icon">🌑</div>
-        <div className="sidebar__logo-text">
-          <span className="sidebar__logo-title">Shadow</span>
-          <span className="sidebar__logo-subtitle">Awakening</span>
+    <>
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar__logo">
+          <span className="sidebar__logo-icon">🌑</span>
+          <div className="sidebar__logo-text">
+            <span className="sidebar__logo-title">Shadow</span>
+            <span className="sidebar__logo-subtitle">Awakening</span>
+          </div>
         </div>
-      </div>
 
-      <nav className="sidebar__nav">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) =>
-              `sidebar__link ${isActive ? 'sidebar__link--active' : ''}`
-            }
-            end={item.path === '/'}
-          >
-            <span className="sidebar__link-icon">{item.icon}</span>
-            <span className="sidebar__link-text">{t(`nav.${item.key}`)}</span>
-            <div className="sidebar__link-glow" />
-          </NavLink>
-        ))}
-      </nav>
+        <nav className="sidebar__nav">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={`sidebar__link ${location.pathname === link.path ? 'sidebar__link--active' : ''}`}
+              onClick={onClose}
+            >
+              <span className="sidebar__link-icon">{link.icon}</span>
+              <span className="sidebar__link-text">{link.label}</span>
+              <div className="sidebar__link-glow" />
+            </Link>
+          ))}
+        </nav>
 
-      <div className="sidebar__footer">
-        <button className="sidebar__logout" onClick={handleLogout}>
-          <span>🚪</span>
-          <span>{t('auth.logout')}</span>
-        </button>
-      </div>
-    </motion.aside>
+        <div className="sidebar__footer">
+          <button className="sidebar__logout" onClick={logout}>
+            <span className="sidebar__link-icon">🚪</span>
+            <span>{t('auth.logout')}</span>
+          </button>
+        </div>
+      </aside>
+      
+      {/* Mobile Overlay */}
+      {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
+    </>
   );
 }

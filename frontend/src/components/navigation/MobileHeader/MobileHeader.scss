@@ -1,0 +1,78 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.mobile-header {
+  display: none;
+  height: $topbar-height;
+  background: $bg-secondary;
+  border-bottom: 1px solid $border-color;
+  padding: 0 $space-4;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky + 10;
+  backdrop-filter: blur(10px);
+
+  @include responsive($bp-md) {
+    display: flex;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+
+    &-icon {
+      font-size: 1.5rem;
+    }
+
+    &-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-title {
+      font-family: $font-display;
+      font-size: $font-base;
+      font-weight: $font-weight-bold;
+      @include glow-text($neon-purple);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    &-subtitle {
+      font-size: 0.6rem;
+      color: $text-muted;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+  }
+
+  &__toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px;
+
+    &-bar {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background-color: $text-primary;
+      border-radius: 2px;
+      transition: all $transition-base;
+    }
+
+    &:hover &-bar {
+      background-color: $neon-purple;
+      box-shadow: 0 0 8px $neon-purple;
+    }
+  }
+}

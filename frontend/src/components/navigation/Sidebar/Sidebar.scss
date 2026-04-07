@@ -153,9 +153,24 @@
   @include responsive($bp-md) {
     transform: translateX(-100%);
     width: $sidebar-width;
+    transition: transform $transition-base;
 
     &.open {
       transform: translateX(0);
     }
+  }
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: $z-sticky - 10;
+  animation: fadeIn $transition-fast;
+
+  @include responsive($bp-md) {
+    display: block;
   }
 }

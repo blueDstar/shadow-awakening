@@ -12,6 +12,12 @@
   gap: $space-5;
   padding: $space-5 $space-6;
 
+  @include responsive($bp-sm) {
+    flex-direction: column;
+    text-align: center;
+    padding: $space-5;
+  }
+
   &__icon { font-size: 2rem; }
   &__info { flex: 1; }
   &__info h3 { color: $text-primary; font-size: $font-base; margin-bottom: $space-2; }
