@@ -74,6 +74,15 @@ export default function DailyQuests() {
     }
   };
 
+  const handleReroll = async (questId) => {
+    try {
+      await questService.reroll(questId);
+      await loadQuests();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="quests-loading">
@@ -211,6 +220,15 @@ export default function DailyQuests() {
                           >
                             {completing === quest.id ? '⏳' : '✅'} {t('quests.markComplete')}
                           </button>
+                          {!quest.is_rerolled && (
+                            <button
+                              className="quest-card__reroll-btn"
+                              onClick={() => handleReroll(quest.id)}
+                              title="Xoay nhiệm vụ (1 lần/ngày)"
+                            >
+                              🔄
+                            </button>
+                          )}
                           <button
                             className="quest-card__fail-btn"
                             onClick={() => handleFail(quest.id)}

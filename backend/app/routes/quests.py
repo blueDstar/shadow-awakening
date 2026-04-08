@@ -11,6 +11,7 @@ from app.services.quest_engine import generate_daily_quests
 from app.services.stat_service import update_stats
 from app.services.streak_service import update_streak
 from app.utils.exp_calculator import check_level_up
+from app.services.progression_service import check_all_progress
 
 router = APIRouter(prefix="/api/quests", tags=["quests"])
 
@@ -46,6 +47,7 @@ async def get_today_quests(
                 "quest_date": str(q.quest_date),
                 "completed_at": q.completed_at.isoformat() if q.completed_at else None,
                 "fail_reason": q.fail_reason,
+                "is_rerolled": q.is_rerolled,
             }
             for q in quests
         ],
@@ -91,6 +93,7 @@ async def refresh_quests(
                 "quest_date": str(q.quest_date),
                 "completed_at": q.completed_at.isoformat() if q.completed_at else None,
                 "fail_reason": q.fail_reason,
+                "is_rerolled": q.is_rerolled,
             }
             for q in quests
         ],
@@ -100,6 +103,37 @@ async def refresh_quests(
         "day_completed": completed == total and total > 0,
         "can_refresh": all(q.status != "pending" for q in quests) and total > 0,
         "quest_date": str(target_date),
+    }
+
+
+@router.post("/{quest_id}/reroll")
+async def reroll_quest(
+    quest_id: str,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Replace a quest with a new one."""
+    from app.services.quest_engine import reroll_daily_quest
+    import uuid
+    
+    try:
+        q_uuid = uuid.UUID(quest_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid quest ID")
+        
+    new_quest = await reroll_daily_quest(db, user, q_uuid)
+    if not new_quest:
+        raise HTTPException(status_code=404, detail="Quest not found or cannot be rerolled")
+        
+    await db.commit()
+    return {
+        "status": "success",
+        "quest": {
+            "id": str(new_quest.id),
+            "title_vi": new_quest.title_vi,
+            "title_en": new_quest.title_en,
+            "status": new_quest.status,
+        }
     }
 
 
@@ -188,6 +222,9 @@ async def complete_quest(
     
     if all_completed:
         await update_streak(db, user.id, "overall")
+    
+    # Check for Skills, Challenges, and Rewards!
+    await check_all_progress(db, user.id)
     
     await db.flush()
     

@@ -25,6 +25,23 @@ export default function Skills() {
 
   if (loading) return <div className="skills-loading">{t('common.loading')}</div>;
 
+  const formatCondition = (conditionStr) => {
+    if (!conditionStr) return t('skills.none');
+    try {
+      const parsed = JSON.parse(conditionStr);
+      let parts = [];
+      if (parsed.level) parts.push(`${t('dashboard.level')} ${parsed.level}`);
+      if (parsed.stat) {
+        Object.entries(parsed.stat).forEach(([k, v]) => {
+          parts.push(`${t(`stats.${k}`)}: ${v}`);
+        });
+      }
+      return parts.length > 0 ? parts.join(', ') : conditionStr;
+    } catch {
+      return conditionStr;
+    }
+  };
+
   return (
     <div className="skills-page">
       <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t('skills.title')}</motion.h1>
@@ -44,7 +61,10 @@ export default function Skills() {
               <div className="skill-card__icon">{skill.icon}</div>
               <h3 className="skill-card__name">{name}</h3>
               <p className="skill-card__desc">{description}</p>
-              <p className="skill-card__condition">{skill.unlock_condition}</p>
+              <p className="skill-card__condition">
+                <strong>{t('skills.unlockCondition') || 'Yêu cầu'}: </strong> 
+                {formatCondition(skill.unlock_condition)}
+              </p>
               <span className={`skill-card__status ${skill.is_locked ? '' : 'unlocked'}`}>
                 {skill.is_locked ? `🔒 ${t('skills.locked')}` : `✅ ${t('skills.unlocked')}`}
               </span>

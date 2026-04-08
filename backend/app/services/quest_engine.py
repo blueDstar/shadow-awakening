@@ -806,3 +806,53 @@ async def _get_7d_completion_rate(db: AsyncSession, user_id, today: date) -> flo
 def get_daily_quote() -> dict:
     """Get a random daily motivational quote."""
     return random.choice(DAILY_QUOTES)
+
+
+async def reroll_daily_quest(db: AsyncSession, user: User, quest_id: uuid.UUID) -> DailyQuest:
+    """ Replace an existing pending or failed quest with a new one of the same type. """
+    # 1. Get existing quest
+    result = await db.execute(
+        select(DailyQuest).where(
+            and_(DailyQuest.id == quest_id, DailyQuest.user_id == user.id)
+        )
+    )
+    old_quest = result.scalar_one_or_none()
+    if not old_quest:
+        return None
+    if old_quest.is_rerolled:
+        return None # Alternatively could raise exception, handle in route
+        
+    # 2. Get character and setup for generation
+    character = await _get_character(db, user.id)
+    level = character.level if character else 1
+    
+    streaks = await _get_streaks(db, user.id)
+    overall_streak = _get_overall_streak(streaks)
+    base_diff = calculate_base_difficulty(level, overall_streak)
+    
+    # 3. Find a new template for the same category
+    category = old_quest.category
+    templates = QUEST_TEMPLATES.get(category, [])
+    if not templates:
+        return old_quest # Fallback
+        
+    # Filter out the title of the current quest to avoid rerolling into same quest
+    available_templates = [t for t in templates if t["title_vi"] != old_quest.title_vi]
+    template = random.choice(available_templates if available_templates else templates)
+    
+    # 4. Build new quest
+    q = _build_quest_from_template(template, old_quest.difficulty, level, old_quest.quest_type)
+    
+    # 5. Replace fields
+    old_quest.title_vi = q["title_vi"]
+    old_quest.title_en = q["title_en"]
+    old_quest.description_vi = q.get("desc_vi", "")
+    old_quest.description_en = q.get("desc_en", "")
+    old_quest.status = "pending"
+    old_quest.completed_at = None
+    old_quest.fail_reason = None
+    old_quest.is_rerolled = True
+    old_quest.stat_rewards = json.dumps(q.get("stat_rewards", {}))
+    
+    await db.flush()
+    return old_quest

@@ -243,6 +243,20 @@
     &:hover { background: rgba($danger, 0.1); }
   }
 
+  &__reroll-btn {
+    @include button-ghost;
+    padding: $space-2;
+    font-size: $font-sm;
+    border-color: rgba($neon-blue, 0.3);
+    color: $neon-blue;
+
+    &:hover { 
+      background: rgba($neon-blue, 0.1); 
+      transform: rotate(180deg);
+      transition: transform 0.3s ease;
+    }
+  }
+
   &__status {
     font-size: $font-sm;
     padding: $space-2 $space-4;

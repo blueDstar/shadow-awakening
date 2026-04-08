@@ -95,6 +95,7 @@ export default function Dashboard() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
+        <div className="shadow-fire-bg" />
         <div className="character-info">
           <div className="character-info__avatar">
             <div className="character-info__avatar-glow" />

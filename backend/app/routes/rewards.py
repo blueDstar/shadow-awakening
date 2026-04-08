@@ -43,3 +43,50 @@ async def get_all_rewards(
         })
         
     return formatted_rewards
+
+@router.post("/{reward_id}/equip")
+async def equip_reward(
+    reward_id: str,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    import uuid
+    from fastapi import HTTPException
+    from sqlalchemy import and_
+    from app.models import Character
+    
+    # Verify unlocked
+    try:
+        r_uuid = uuid.UUID(reward_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+        
+    ur_result = await db.execute(
+        select(UserReward).where(
+            and_(UserReward.user_id == user.id, UserReward.reward_id == r_uuid)
+        )
+    )
+    if not ur_result.scalar_one_or_none():
+        raise HTTPException(status_code=400, detail="Reward not unlocked")
+        
+    # Get reward details
+    reward_result = await db.execute(select(Reward).where(Reward.id == r_uuid))
+    reward = reward_result.scalar_one_or_none()
+    if not reward:
+        raise HTTPException(status_code=404, detail="Reward not found")
+        
+    # Get character
+    char_result = await db.execute(select(Character).where(Character.user_id == user.id))
+    character = char_result.scalar_one_or_none()
+    if not character:
+        raise HTTPException(status_code=404, detail="Character not found")
+        
+    if reward.reward_type == "title":
+        character.title = reward.name_vi
+    elif reward.reward_type == "aura":
+        # Extract aura key from unlock_condition or name if unstructured. Defaulting logic:
+        # Here we just use the reward name or a mapping. Let's use name for now.
+        character.aura = reward.name_en.lower().replace(" ", "_")
+        
+    await db.commit()
+    return {"status": "equipped", "type": reward.reward_type, "value": reward.name_vi}

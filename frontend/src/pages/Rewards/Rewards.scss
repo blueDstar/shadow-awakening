@@ -23,6 +23,28 @@
 
   &__icon { font-size: 2.5rem; display: block; margin-bottom: $space-3; }
   h3 { color: $text-primary; font-size: $font-base; margin-bottom: $space-2; }
-  &__type { font-size: $font-xs; color: $text-muted; display: block; margin-bottom: $space-1; text-transform: uppercase; letter-spacing: 1px; }
+  &__desc { color: $text-secondary; font-size: $font-sm; margin-bottom: $space-3; line-height: 1.4; display: none; }
+  &:hover &__desc { display: block; }
+  &__type { font-size: $font-xs; color: $text-muted; display: block; margin-bottom: $space-2; text-transform: uppercase; letter-spacing: 1px; }
+  
+  &__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-3;
+  }
+  
   &__rarity { font-size: $font-xs; font-weight: $font-weight-semibold; text-transform: uppercase; letter-spacing: 1px; }
+
+  &__equip-btn {
+    @include button-ghost;
+    padding: $space-2 $space-4;
+    font-size: $font-sm;
+    color: var(--rarity-color);
+    border-color: var(--rarity-color);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
 }

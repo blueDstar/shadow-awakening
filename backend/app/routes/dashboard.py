@@ -42,10 +42,15 @@ async def get_dashboard_summary(
         
         stats = [{"stat_name": s.stat_name, "current_value": s.current_value, "cap": stat_cap} for s in stats_list]
     
+    # Timezone adjustment (Vietnam UTC+7)
+    vn_tz = timezone(timedelta(hours=7))
+    now = datetime.now(vn_tz)
+    today = now.date()
+    
     # Today's quests
     today_result = await db.execute(
         select(DailyQuest).where(
-            and_(DailyQuest.user_id == user.id, DailyQuest.quest_date == date.today())
+            and_(DailyQuest.user_id == user.id, DailyQuest.quest_date == today)
         )
     )
     today_quests = today_result.scalars().all()
@@ -69,8 +74,7 @@ async def get_dashboard_summary(
     tz_name = settings.timezone if settings else "Asia/Ho_Chi_Minh"
     
     # Calculate reset countdown (seconds until midnight in user's timezone)
-    now = datetime.now()
-    midnight = datetime.combine(date.today() + timedelta(days=1), datetime.min.time())
+    midnight = datetime.combine(today + timedelta(days=1), datetime.min.time(), tzinfo=vn_tz)
     countdown = int((midnight - now).total_seconds())
     
     # Quote
@@ -115,7 +119,44 @@ async def get_reset_countdown(
     user: User = Depends(get_current_user),
 ):
     """Get seconds until daily reset."""
-    now = datetime.now()
-    midnight = datetime.combine(date.today() + timedelta(days=1), datetime.min.time())
+    vn_tz = timezone(timedelta(hours=7))
+    now = datetime.now(vn_tz)
+    today = now.date()
+    midnight = datetime.combine(today + timedelta(days=1), datetime.min.time(), tzinfo=vn_tz)
     countdown = int((midnight - now).total_seconds())
     return {"reset_countdown_seconds": max(0, countdown)}
+
+
+@router.post("/set-title")
+async def set_character_title(
+    title: str,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Set the character's active title."""
+    from app.models import UserReward, Reward
+    
+    # Verify title exists in user's rewards
+    reward_result = await db.execute(
+        select(Reward).join(UserReward).where(
+            and_(
+                UserReward.user_id == user.id,
+                Reward.reward_type == "title",
+                (Reward.name_vi == title) | (Reward.name_en == title)
+            )
+        )
+    )
+    reward = reward_result.scalar_one_or_none()
+    
+    if not reward:
+        raise HTTPException(status_code=400, detail="Title not unlocked or invalid")
+        
+    # Update character
+    char_result = await db.execute(select(Character).where(Character.user_id == user.id))
+    character = char_result.scalar_one_or_none()
+    
+    if character:
+        character.title = title
+        await db.commit()
+    
+    return {"status": "success", "new_title": title}

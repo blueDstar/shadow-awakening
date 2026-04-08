@@ -48,12 +48,14 @@ export const questService = USE_MOCK ? {
     if (q) { q.status = 'failed'; MOCK_QUESTS.failed++; }
     return mockRes({ status: 'failed' });
   },
+  reroll: (questId) => mockRes({ status: 'success', quest: {} }),
   getHistory: () => mockRes([]),
 } : {
   getToday: () => api.get('/api/quests/today', { params: { client_date: getLocalDate() } }),
   complete: (questId) => api.post(`/api/quests/${questId}/complete`),
   fail: (questId, reason) => api.post(`/api/quests/${questId}/fail`, null, { params: { fail_reason: reason } }),
   refresh: () => api.post('/api/quests/refresh', null, { params: { client_date: getLocalDate() } }),
+  reroll: (questId) => api.post(`/api/quests/${questId}/reroll`),
   getHistory: (limit = 30) => api.get('/api/quests/history', { params: { limit } }),
 };
 
@@ -113,6 +115,8 @@ export const challengeService = USE_MOCK ? {
 
 export const rewardService = USE_MOCK ? {
   getAll: () => mockRes([]),
+  equip: (id) => mockRes({ status: 'equipped' }),
 } : {
   getAll: () => api.get('/api/rewards'),
+  equip: (id) => api.post(`/api/rewards/${id}/equip`),
 };

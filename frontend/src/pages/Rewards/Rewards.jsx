@@ -25,6 +25,15 @@ export default function Rewards() {
     fetchRewards();
   }, []);
 
+  const handleEquip = async (id, name) => {
+    try {
+      await rewardService.equip(id);
+      alert(t('rewards.equipped', { defaultValue: `Đã trang bị ${name}!` }));
+    } catch (error) {
+      console.error('Failed to equip reward', error);
+    }
+  };
+
   if (loading) return <div className="rewards-loading">{t('common.loading')}</div>;
 
   return (
@@ -48,9 +57,19 @@ export default function Rewards() {
               <h3>{name}</h3>
               <p className="reward-card__desc">{description}</p>
               <span className="reward-card__type">{r.reward_type}</span>
-              <span className="reward-card__rarity" style={{ color: RARITY_COLORS[r.rarity] }}>
-                {r.rarity.toUpperCase()}
-              </span>
+              <div className="reward-card__bottom">
+                <span className="reward-card__rarity" style={{ color: RARITY_COLORS[r.rarity] }}>
+                  {r.rarity.toUpperCase()}
+                </span>
+                {r.is_unlocked && (
+                  <button 
+                    className="reward-card__equip-btn" 
+                    onClick={() => handleEquip(r.id, name)}
+                  >
+                    {t('rewards.equip', { defaultValue: 'Trang bị' })}
+                  </button>
+                )}
+              </div>
             </motion.div>
           );
         })}
