@@ -809,7 +809,7 @@ def get_daily_quote() -> dict:
 
 
 async def reroll_daily_quest(db: AsyncSession, user: User, quest_id: uuid.UUID) -> DailyQuest:
-    """ Replace an existing pending or failed quest with a new one of the same type. """
+    """ Replace an existing pending or failed quest with a completely new one, preferably of a different category. """
     # 1. Get existing quest
     result = await db.execute(
         select(DailyQuest).where(
@@ -820,34 +820,61 @@ async def reroll_daily_quest(db: AsyncSession, user: User, quest_id: uuid.UUID) 
     if not old_quest:
         return None
     if old_quest.is_rerolled:
-        return None # Alternatively could raise exception, handle in route
+        return None
         
     # 2. Get character and setup for generation
     character = await _get_character(db, user.id)
     level = character.level if character else 1
     
-    streaks = await _get_streaks(db, user.id)
-    overall_streak = _get_overall_streak(streaks)
-    base_diff = calculate_base_difficulty(level, overall_streak)
+    # 3. Get all active active quests today to avoid duplication
+    today = date.today()
+    existing_quests_result = await db.execute(
+        select(DailyQuest).where(
+            and_(DailyQuest.user_id == user.id, DailyQuest.quest_date == today)
+        )
+    )
+    active_titles = {q.title_vi for q in existing_quests_result.scalars().all()}
     
-    # 3. Find a new template for the same category
-    category = old_quest.category
-    templates = QUEST_TEMPLATES.get(category, [])
-    if not templates:
-        return old_quest # Fallback
+    # 4. Find all possible templates, prioritizing different categories
+    all_categories = list(QUEST_TEMPLATES.keys())
+    other_categories = [c for c in all_categories if c != old_quest.category]
+    if not other_categories:
+        other_categories = all_categories
         
-    # Filter out the title of the current quest to avoid rerolling into same quest
-    available_templates = [t for t in templates if t["title_vi"] != old_quest.title_vi]
-    template = random.choice(available_templates if available_templates else templates)
+    # Pick templates not currently active
+    available_templates = []
     
-    # 4. Build new quest
+    # Try different categories first
+    for cat in other_categories:
+        for t in QUEST_TEMPLATES.get(cat, []):
+            # Cố gắng không lấy những mẫu có title giống với các quest đang active
+            if not any(t["title_vi"].replace("{n}", "").replace("{topic}", "").replace("{m}", "").replace("{time}", "").strip() in active_title 
+                       for active_title in active_titles):
+                available_templates.append(t)
+                
+    # Fallback to old category if really no other choice
+    if not available_templates:
+        for t in QUEST_TEMPLATES.get(old_quest.category, []):
+            if not any(t["title_vi"].replace("{n}", "").strip() in active_title for active_title in active_titles):
+                if t["title_vi"] != old_quest.title_vi:
+                    available_templates.append(t)
+                    
+    # Ultimate fallback
+    if not available_templates:
+        for cat in all_categories:
+            available_templates.extend(QUEST_TEMPLATES.get(cat, []))
+            
+    template = random.choice(available_templates)
+    
+    # 5. Build new quest
     q = _build_quest_from_template(template, old_quest.difficulty, level, old_quest.quest_type)
     
-    # 5. Replace fields
+    # 6. Replace fields
     old_quest.title_vi = q["title_vi"]
     old_quest.title_en = q["title_en"]
     old_quest.description_vi = q.get("desc_vi", "")
     old_quest.description_en = q.get("desc_en", "")
+    old_quest.category = q["category"]  # Update category to match new template
     old_quest.status = "pending"
     old_quest.completed_at = None
     old_quest.fail_reason = None
