@@ -18,6 +18,9 @@ class Character(Base):
     total_exp = Column(BigInteger, default=0)
     aura = Column(String(50), default="shadow_basic")
     avatar_type = Column(String(50), default="default")
+    avatar_url = Column(String, nullable=True)
+    cover_url = Column(String, nullable=True)
+    background_url = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="character")

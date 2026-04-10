@@ -7,8 +7,9 @@ from app.db.database import init_db
 from app.routes import (
     auth, quests, dashboard, stats, streaks, 
     breakthrough, journal, settings as settings_routes,
-    skills, challenges, rewards
+    skills, challenges, rewards, profile
 )
+from fastapi.staticfiles import StaticFiles
 
 
 @asynccontextmanager
@@ -49,6 +50,10 @@ app.include_router(settings_routes.router)
 app.include_router(skills.router)
 app.include_router(challenges.router)
 app.include_router(rewards.router)
+app.include_router(profile.router)
+
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.get("/")

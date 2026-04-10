@@ -16,6 +16,9 @@ class CharacterResponse(BaseModel):
     stats: List[dict] = []
     stat_cap: int = 100
     phase: int = 1
+    avatar_url: Optional[str] = None
+    cover_url: Optional[str] = None
+    background_url: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -24,3 +27,6 @@ class CharacterResponse(BaseModel):
 class CharacterUpdate(BaseModel):
     name: Optional[str] = None
     avatar_type: Optional[str] = None
+    avatar_url: Optional[str] = None
+    cover_url: Optional[str] = None
+    background_url: Optional[str] = None
