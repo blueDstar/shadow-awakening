@@ -27,7 +27,7 @@
     "bestStreak": "Chuỗi kỷ lục",
     "level": "Cấp",
     "phase": "Giai đoạn",
-    "statCap": "Trần chỉ số"
+    "statCap": "Giới hạn"
   },
   "quests": {
     "title": "Nhiệm Vụ Hôm Nay",
@@ -62,8 +62,8 @@
     "knowledge": "Kiến Thức",
     "consistency": "Kiên Định",
     "mental_resilience": "Tinh Thần Bất Khuất",
-    "social_courage": "Dũng Khí Xã Hội",
-    "cap": "Trần",
+    "social_courage": "Dũng Khí Giao Tiếp",
+    "cap": "Giới hạn",
     "breakthroughAvailable": "Nhiệm Vụ Đột Phá đã sẵn sàng!"
   },
   "skills": {
@@ -177,6 +177,6 @@
     "available": "Đột phá đã sẵn sàng!",
     "start": "Bắt Đầu Đột Phá",
     "complete": "Hoàn Thành Đột Phá",
-    "capIncrease": "Trần chỉ số tăng từ {{from}} lên {{to}}"
+    "capIncrease": "Giới hạn tăng từ {{from}} lên {{to}}"
   }
 }

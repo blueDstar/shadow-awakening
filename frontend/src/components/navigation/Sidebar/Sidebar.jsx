@@ -9,13 +9,13 @@ export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
 
   const navLinks = [
-    { path: '/', icon: <img src="/main_app_logo_1024.png" alt="dashboard" style={{ width: '30px', height: '30px' }} />, label: t('nav.dashboard') },
-    { path: '/quests', icon: <img src="/rewards_system_chest_512.png" alt="quests" style={{ width: '30px', height: '30px' }} />, label: t('nav.quests') },
-    { path: '/stats', icon: <img src="/stats_shadow_hunter_512.png" alt="stats" style={{ width: '30px', height: '30px' }} />, label: t('nav.stats') },
-    { path: '/skills', icon: <img src="/focus_eye_512.png" alt="skills" style={{ width: '30px', height: '30px' }} />, label: t('nav.skills') },
-    { path: '/challenges', icon: <img src="/fitness_sword_512.png" alt="challenges" style={{ width: '30px', height: '30px' }} />, label: t('nav.challenges') },
-    { path: '/rewards', icon: <img src="/confidence_soul_fire_512.png" alt="rewards" style={{ width: '30px', height: '30px' }} />, label: t('nav.rewards') },
-    { path: '/journal', icon: <img src="/wisdom_spellbook_512.png" alt="journal" style={{ width: '30px', height: '30px' }} />, label: t('nav.journal') },
+    { path: '/', icon: <img src="/main_app_logo_1024.png" alt="dashboard" style={{ width: '35px', height: '35px' }} />, label: t('nav.dashboard') },
+    { path: '/quests', icon: <img src="/rewards_system_chest_512.png" alt="quests" style={{ width: '35px', height: '35px' }} />, label: t('nav.quests') },
+    { path: '/stats', icon: <img src="/stats_shadow_hunter_512.png" alt="stats" style={{ width: '35px', height: '35px' }} />, label: t('nav.stats') },
+    { path: '/skills', icon: <img src="/focus_eye_512.png" alt="skills" style={{ width: '35px', height: '35px' }} />, label: t('nav.skills') },
+    { path: '/challenges', icon: <img src="/fitness_sword_512.png" alt="challenges" style={{ width: '35px', height: '35px' }} />, label: t('nav.challenges') },
+    { path: '/rewards', icon: <img src="/confidence_soul_fire_512.png" alt="rewards" style={{ width: '35px', height: '35px' }} />, label: t('nav.rewards') },
+    { path: '/journal', icon: <img src="/wisdom_spellbook_512.png" alt="journal" style={{ width: '35px', height: '35px' }} />, label: t('nav.journal') },
     { path: '/settings', icon: '⚙️', label: t('nav.settings') },
   ];
 
