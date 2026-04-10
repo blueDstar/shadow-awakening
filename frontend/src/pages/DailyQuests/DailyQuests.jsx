@@ -94,7 +94,7 @@ export default function DailyQuests() {
   }
 
   const allQuests = questData?.quests || [];
-  
+
   // Split into pending vs done
   const pendingQuests = allQuests.filter(q => q.status === 'pending');
   const doneQuests = allQuests.filter(q => q.status === 'completed' || q.status === 'failed');
@@ -116,7 +116,7 @@ export default function DailyQuests() {
   const renderQuestCard = (quest, i) => {
     const type = quest.quest_type;
     let statRewards = {};
-    try { statRewards = JSON.parse(quest.stat_rewards || '{}'); } catch {}
+    try { statRewards = JSON.parse(quest.stat_rewards || '{}'); } catch { }
     return (
       <motion.div
         key={quest.id}
@@ -155,7 +155,7 @@ export default function DailyQuests() {
                 onClick={() => handleComplete(quest.id)}
                 disabled={completing === quest.id}
               >
-                {completing === quest.id ? '⏳' : '✅'} {t('quests.markComplete')}
+                {completing === quest.id ? '⏳' : <img src="/sucess_quest_512.png" alt="complete" style={{ width: '35px', height: '35px' }} />} {t('quests.markComplete')}
               </button>
               {!quest.is_rerolled && (
                 <button
@@ -163,25 +163,25 @@ export default function DailyQuests() {
                   onClick={() => handleReroll(quest.id)}
                   title="Xoay nhiệm vụ (1 lần/ngày)"
                 >
-                  🔄
+                  <img src="/roll_quest_512.png" alt="reroll" style={{ width: '35px', height: '35px' }} />
                 </button>
               )}
               <button
                 className="quest-card__fail-btn"
                 onClick={() => handleFail(quest.id)}
               >
-                ❌
+                <img src="/fail_quest_512.png" alt="fail" style={{ width: '35px', height: '35px' }} />
               </button>
             </>
           )}
           {quest.status === 'completed' && (
             <span className="quest-card__status quest-card__status--completed">
-              ✅ {t('quests.complete')}
+              <img src="/sucess_quest_512.png" alt="complete" style={{ width: '35px', height: '35px' }} /> {t('quests.complete')}
             </span>
           )}
           {quest.status === 'failed' && (
             <span className="quest-card__status quest-card__status--failed">
-              ❌ {t('quests.failed')}
+              <img src="/fail_quest_512.png" alt="fail" style={{ width: '35px', height: '35px' }} /> {t('quests.failed')}
             </span>
           )}
         </div>
@@ -270,7 +270,7 @@ export default function DailyQuests() {
             onClick={handleRefresh}
             disabled={refreshing}
           >
-            {refreshing ? '⌛' : '🔄'} {t('quests.refreshQuests')}
+            {refreshing ? '⌛' : <img src="/roll_quest_512.png" alt="reroll" style={{ width: '35px', height: '35px' }} />} {t('quests.refreshQuests')}
           </button>
         </motion.div>
       )}
@@ -281,7 +281,7 @@ export default function DailyQuests() {
           ? renderQuestGroup(groupedPending, pendingQuests)
           : (
             <div className="no-quests no-quests--pending">
-              <span className="no-quests__icon">🎯</span>
+              <span className="no-quests__icon"><img src="/complete_quest512.png" alt="complete" style={{ width: '35px', height: '35px' }} /></span>
               <p>{doneQuests.length > 0 ? t('quests.allDoneForNow') : t('quests.noQuests')}</p>
             </div>
           )
