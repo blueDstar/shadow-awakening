@@ -48,12 +48,16 @@ app.include_router(breakthrough.router)
 app.include_router(journal.router)
 app.include_router(settings_routes.router)
 app.include_router(skills.router)
-app.include_router(challenges.router)
 app.include_router(rewards.router)
 app.include_router(profile.router)
 
-# Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Mount static files with absolute path
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_DIR = BASE_DIR / "static"
+STATIC_DIR.mkdir(parents=True, exist_ok=True)
+
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
 @app.get("/")

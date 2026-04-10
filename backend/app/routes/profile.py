@@ -10,9 +10,13 @@ from app.core.deps import get_current_user
 from app.models import User, Character
 from app.schemas.character import CharacterResponse
 
+from pathlib import Path
+
 router = APIRouter(prefix="/api/profile", tags=["profile"])
 
-UPLOAD_DIR = "static/uploads"
+# Use absolute path for uploads relative to the app root
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+UPLOAD_DIR = BASE_DIR / "static" / "uploads"
 
 @router.post("/upload/{img_type}")
 async def upload_profile_image(
@@ -25,21 +29,22 @@ async def upload_profile_image(
         raise HTTPException(status_code=400, detail="Invalid image type")
 
     # Ensure upload dir exists
-    if not os.path.exists(UPLOAD_DIR):
-        os.makedirs(UPLOAD_DIR, exist_ok=True)
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
     # Generate unique filename
-    file_ext = os.path.splitext(file.filename)[1]
+    file_ext = Path(file.filename).suffix
     if not file_ext:
         file_ext = ".png" # default
     
     filename = f"{img_type}_{user.id}_{uuid.uuid4().hex}{file_ext}"
-    file_path = os.path.join(UPLOAD_DIR, filename)
+    file_path = UPLOAD_DIR / filename
 
     try:
+        content = await file.read()
         with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+            buffer.write(content)
     except Exception as e:
+        print(f"Error saving file: {e}")
         raise HTTPException(status_code=500, detail=f"Could not save file: {str(e)}")
 
     # Update database
