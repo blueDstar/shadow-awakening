@@ -11,8 +11,16 @@ const STAT_COLORS = {
   social_courage: '#f97316',
 };
 const STAT_ICONS = {
-  wisdom: '📚', confidence: '💪', strength: '⚔️', discipline: '🎯', focus: '🧠',
-  stamina: '🏃', knowledge: '🔬', consistency: '🔁', mental_resilience: '🛡️', social_courage: '🗣️',
+  wisdom: <img src="/wisdom_spellbook_512.png" alt="wisdom" style={{width: '24px', height: '24px', verticalAlign: 'middle', objectFit: 'contain'}} />,
+  confidence: <img src="/confidence_soul_fire_512.png" alt="confidence" style={{width: '24px', height: '24px', verticalAlign: 'middle', objectFit: 'contain'}} />,
+  strength: <img src="/fitness_sword_512.png" alt="strength" style={{width: '24px', height: '24px', verticalAlign: 'middle', objectFit: 'contain'}} />,
+  discipline: '🎯',
+  focus: <img src="/focus_eye_512.png" alt="focus" style={{width: '24px', height: '24px', verticalAlign: 'middle', objectFit: 'contain'}} />,
+  stamina: <img src="/fitness_sword_512.png" alt="stamina" style={{width: '24px', height: '24px', verticalAlign: 'middle', objectFit: 'contain'}} />,
+  knowledge: '🔬', 
+  consistency: '🔁', 
+  mental_resilience: '🛡️', 
+  social_courage: '🗣️',
 };
 
 export default function CharacterStats() {

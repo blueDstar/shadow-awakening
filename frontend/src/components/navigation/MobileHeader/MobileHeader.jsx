@@ -8,7 +8,7 @@ const MobileHeader = memo(({ onMenuClick }) => {
   return (
     <header className="mobile-header">
       <div className="mobile-header__logo">
-        <span className="mobile-header__logo-icon">🌑</span>
+        <img src="/main_app_logo_1024.png" alt="Logo" className="mobile-header__logo-icon" style={{width: '32px', height: '32px'}} />
         <div className="mobile-header__logo-text">
           <span className="mobile-header__logo-title">Shadow</span>
           <span className="mobile-header__logo-subtitle">Awakening</span>

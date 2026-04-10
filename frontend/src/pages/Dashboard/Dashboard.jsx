@@ -12,8 +12,12 @@ const STAT_COLORS = {
 };
 
 const STAT_ICONS = {
-  wisdom: '📚', confidence: '💪', strength: '⚔️',
-  discipline: '🎯', focus: '🧠', stamina: '🏃',
+  wisdom: <img src="/wisdom_spellbook_512.png" alt="wisdom" style={{width: '20px', height: '20px', verticalAlign: 'middle', objectFit: 'contain'}} />,
+  confidence: <img src="/confidence_soul_fire_512.png" alt="confidence" style={{width: '20px', height: '20px', verticalAlign: 'middle', objectFit: 'contain'}} />,
+  strength: <img src="/fitness_sword_512.png" alt="strength" style={{width: '20px', height: '20px', verticalAlign: 'middle', objectFit: 'contain'}} />,
+  discipline: '🎯',
+  focus: <img src="/focus_eye_512.png" alt="focus" style={{width: '20px', height: '20px', verticalAlign: 'middle', objectFit: 'contain'}} />,
+  stamina: <img src="/fitness_sword_512.png" alt="stamina" style={{width: '20px', height: '20px', verticalAlign: 'middle', objectFit: 'contain'}} />,
   knowledge: '🔬', consistency: '🔁', mental_resilience: '🛡️',
   social_courage: '🗣️',
 };
@@ -99,7 +103,7 @@ export default function Dashboard() {
         <div className="character-info">
           <div className="character-info__avatar">
             <div className="character-info__avatar-glow" />
-            <span className="character-info__avatar-icon">🌑</span>
+            <img src="/main_app_logo_1024.png" alt="Avatar" className="character-info__avatar-icon" style={{width: '64px', height: '64px', objectFit: 'contain', zIndex: 2}} />
           </div>
           <div className="character-info__details">
             <h2 className="character-info__name">{data.character_name}</h2>

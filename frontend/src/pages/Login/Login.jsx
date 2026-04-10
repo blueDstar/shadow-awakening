@@ -40,7 +40,7 @@ export default function Login() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="login-card__header">
-          <div className="login-card__icon">🌑</div>
+          <img src="/main_app_logo_1024.png" alt="Shadow Awakening" className="login-card__icon" style={{width: '80px', margin: '0 auto', display: 'block'}} />
           <h1 className="login-card__title">Shadow Awakening</h1>
           <p className="login-card__subtitle">{t('auth.loginTitle')}</p>
         </div>

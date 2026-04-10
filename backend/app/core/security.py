@@ -22,8 +22,12 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a plain password against a hashed one."""
     try:
-        if not hashed_password or "$" not in hashed_password:
+        if not hashed_password:
             return False
+            
+        if "$" not in hashed_password:
+            # Fallback for old plaintext passwords from previous DB versions
+            return plain_password == hashed_password
             
         algorithm, iterations, salt, pwd_hash = hashed_password.split('$')
         

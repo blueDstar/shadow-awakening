@@ -42,7 +42,7 @@ export default function Register() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="register-card__header">
-          <div className="register-card__icon">🌑</div>
+          <img src="/main_app_logo_1024.png" alt="Shadow Awakening" className="register-card__icon" style={{width: '80px', margin: '0 auto', display: 'block'}} />
           <h1 className="register-card__title">Shadow Awakening</h1>
           <p className="register-card__subtitle">{t('auth.registerTitle')}</p>
         </div>
