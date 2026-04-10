@@ -286,8 +286,8 @@ export default function DailyQuests() {
                   src="/complete_quest512.png"
                   alt="complete"
                   style={{
-                    width: '50px',
-                    height: '50px',
+                    width: '100px',
+                    height: '100px',
                     display: 'block',
                     margin: '0 auto'
                   }}
