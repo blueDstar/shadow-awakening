@@ -49,7 +49,10 @@
     "markComplete": "Xác nhận hoàn thành",
     "markFailed": "Đánh dấu thất bại",
     "refreshQuests": "Triệu hồi thử thách mới",
-    "refreshing": "Đang triệu hồi..."
+    "refreshing": "Đang triệu hồi...",
+    "showHistory": "Xem lịch sử hôm nay",
+    "hideHistory": "Ẩn lịch sử hôm nay",
+    "allDoneForNow": "Tất cả nhiệm vụ đã hoàn thành! Bấm triệu hồi để nhận thêm thử thách."
   },
   "stats": {
     "title": "Chỉ Số Nhân Vật",

@@ -23,6 +23,7 @@ export default function DailyQuests() {
   const [completing, setCompleting] = useState(null);
   const [levelUp, setLevelUp] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => { loadQuests(); }, []);
 
@@ -92,12 +93,123 @@ export default function DailyQuests() {
     );
   }
 
-  const quests = questData?.quests || [];
-  const grouped = {};
-  quests.forEach(q => {
-    if (!grouped[q.quest_type]) grouped[q.quest_type] = [];
-    grouped[q.quest_type].push(q);
+  const allQuests = questData?.quests || [];
+  
+  // Split into pending vs done
+  const pendingQuests = allQuests.filter(q => q.status === 'pending');
+  const doneQuests = allQuests.filter(q => q.status === 'completed' || q.status === 'failed');
+
+  // Group pending by type
+  const groupedPending = {};
+  pendingQuests.forEach(q => {
+    if (!groupedPending[q.quest_type]) groupedPending[q.quest_type] = [];
+    groupedPending[q.quest_type].push(q);
   });
+
+  // Group done by type
+  const groupedDone = {};
+  doneQuests.forEach(q => {
+    if (!groupedDone[q.quest_type]) groupedDone[q.quest_type] = [];
+    groupedDone[q.quest_type].push(q);
+  });
+
+  const renderQuestCard = (quest, i) => {
+    const type = quest.quest_type;
+    let statRewards = {};
+    try { statRewards = JSON.parse(quest.stat_rewards || '{}'); } catch {}
+    return (
+      <motion.div
+        key={quest.id}
+        className={`quest-card quest-card--${quest.status}`}
+        style={{ '--quest-color': QUEST_TYPE_COLORS[type] }}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 20 }}
+        transition={{ delay: i * 0.04 }}
+      >
+        <div className="quest-card__content">
+          <h4 className="quest-card__title">
+            {lang === 'vi' ? quest.title_vi : quest.title_en}
+          </h4>
+          <p className="quest-card__desc">
+            {lang === 'vi' ? quest.description_vi : quest.description_en}
+          </p>
+          <div className="quest-card__meta">
+            <span className="quest-card__exp">+{quest.exp_reward} EXP</span>
+            <span className="quest-card__difficulty">
+              {t('quests.difficulty')}: {'⭐'.repeat(Math.min(Math.ceil(quest.difficulty / 5), 10))}
+            </span>
+            {Object.entries(statRewards).map(([stat, val]) => (
+              <span key={stat} className="quest-card__stat-reward">
+                +{val} {t(`stats.${stat}`)}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="quest-card__actions">
+          {quest.status === 'pending' && (
+            <>
+              <button
+                className="quest-card__complete-btn"
+                onClick={() => handleComplete(quest.id)}
+                disabled={completing === quest.id}
+              >
+                {completing === quest.id ? '⏳' : '✅'} {t('quests.markComplete')}
+              </button>
+              {!quest.is_rerolled && (
+                <button
+                  className="quest-card__reroll-btn"
+                  onClick={() => handleReroll(quest.id)}
+                  title="Xoay nhiệm vụ (1 lần/ngày)"
+                >
+                  🔄
+                </button>
+              )}
+              <button
+                className="quest-card__fail-btn"
+                onClick={() => handleFail(quest.id)}
+              >
+                ❌
+              </button>
+            </>
+          )}
+          {quest.status === 'completed' && (
+            <span className="quest-card__status quest-card__status--completed">
+              ✅ {t('quests.complete')}
+            </span>
+          )}
+          {quest.status === 'failed' && (
+            <span className="quest-card__status quest-card__status--failed">
+              ❌ {t('quests.failed')}
+            </span>
+          )}
+        </div>
+      </motion.div>
+    );
+  };
+
+  const renderQuestGroup = (grouped, quests) => {
+    return Object.entries(grouped).map(([type, typeQuests]) => (
+      <motion.div
+        key={type}
+        className="quest-group"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div className="quest-group__header" style={{ borderLeftColor: QUEST_TYPE_COLORS[type] }}>
+          <span className="quest-group__icon">{QUEST_TYPE_ICONS[type]}</span>
+          <span className="quest-group__title">{t(`quests.${type}`)}</span>
+          <span className="quest-group__count">{typeQuests.length}</span>
+        </div>
+        <div className="quest-group__list">
+          <AnimatePresence>
+            {typeQuests.map((quest, i) => renderQuestCard(quest, i))}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    ));
+  };
 
   return (
     <div className="daily-quests">
@@ -153,8 +265,7 @@ export default function DailyQuests() {
             <span className="day-completed-banner__icon">🔥</span>
             <span>{questData?.day_completed ? t('quests.allCompleted') : t('quests.readyForMore')}</span>
           </div>
-          
-          <button 
+          <button
             className="day-completed-banner__refresh-btn"
             onClick={handleRefresh}
             disabled={refreshing}
@@ -164,102 +275,46 @@ export default function DailyQuests() {
         </motion.div>
       )}
 
+      {/* Active (Pending) Quests */}
       <div className="quest-groups">
-        {Object.entries(grouped).map(([type, typeQuests]) => (
-          <motion.div
-            key={type}
-            className="quest-group"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className="quest-group__header" style={{ borderLeftColor: QUEST_TYPE_COLORS[type] }}>
-              <span className="quest-group__icon">{QUEST_TYPE_ICONS[type]}</span>
-              <span className="quest-group__title">{t(`quests.${type}`)}</span>
-              <span className="quest-group__count">{typeQuests.length}</span>
+        {pendingQuests.length > 0
+          ? renderQuestGroup(groupedPending, pendingQuests)
+          : (
+            <div className="no-quests no-quests--pending">
+              <span className="no-quests__icon">🎯</span>
+              <p>{doneQuests.length > 0 ? t('quests.allDoneForNow') : t('quests.noQuests')}</p>
             </div>
-
-            <div className="quest-group__list">
-              {typeQuests.map((quest, i) => {
-                const statRewards = JSON.parse(quest.stat_rewards || '{}');
-                return (
-                  <motion.div
-                    key={quest.id}
-                    className={`quest-card quest-card--${quest.status}`}
-                    style={{ '--quest-color': QUEST_TYPE_COLORS[type] }}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    <div className="quest-card__content">
-                      <h4 className="quest-card__title">
-                        {lang === 'vi' ? quest.title_vi : quest.title_en}
-                      </h4>
-                      <p className="quest-card__desc">
-                        {lang === 'vi' ? quest.description_vi : quest.description_en}
-                      </p>
-                      <div className="quest-card__meta">
-                        <span className="quest-card__exp">+{quest.exp_reward} EXP</span>
-                        <span className="quest-card__difficulty">
-                          {t('quests.difficulty')}: {'⭐'.repeat(Math.min(quest.difficulty, 5))}
-                        </span>
-                        {Object.entries(statRewards).map(([stat, val]) => (
-                          <span key={stat} className="quest-card__stat-reward">
-                            +{val} {t(`stats.${stat}`)}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="quest-card__actions">
-                      {quest.status === 'pending' && (
-                        <>
-                          <button
-                            className="quest-card__complete-btn"
-                            onClick={() => handleComplete(quest.id)}
-                            disabled={completing === quest.id}
-                          >
-                            {completing === quest.id ? '⏳' : '✅'} {t('quests.markComplete')}
-                          </button>
-                          {!quest.is_rerolled && (
-                            <button
-                              className="quest-card__reroll-btn"
-                              onClick={() => handleReroll(quest.id)}
-                              title="Xoay nhiệm vụ (1 lần/ngày)"
-                            >
-                              🔄
-                            </button>
-                          )}
-                          <button
-                            className="quest-card__fail-btn"
-                            onClick={() => handleFail(quest.id)}
-                          >
-                            ❌
-                          </button>
-                        </>
-                      )}
-                      {quest.status === 'completed' && (
-                        <span className="quest-card__status quest-card__status--completed">
-                          ✅ {t('quests.complete')}
-                        </span>
-                      )}
-                      {quest.status === 'failed' && (
-                        <span className="quest-card__status quest-card__status--failed">
-                          ❌ {t('quests.failed')}
-                        </span>
-                      )}
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
-        ))}
+          )
+        }
       </div>
 
-      {quests.length === 0 && (
-        <div className="no-quests">
-          <span className="no-quests__icon">📜</span>
-          <p>{t('quests.noQuests')}</p>
+      {/* History Toggle */}
+      {doneQuests.length > 0 && (
+        <div className="quest-history-section">
+          <button
+            className="quest-history-toggle"
+            onClick={() => setShowHistory(v => !v)}
+          >
+            <span className="quest-history-toggle__icon">{showHistory ? '🔼' : '🔽'}</span>
+            <span>
+              {showHistory ? t('quests.hideHistory') : t('quests.showHistory')}
+              {' '}({doneQuests.length})
+            </span>
+          </button>
+
+          <AnimatePresence>
+            {showHistory && (
+              <motion.div
+                className="quest-history-list"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {renderQuestGroup(groupedDone, doneQuests)}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
     </div>

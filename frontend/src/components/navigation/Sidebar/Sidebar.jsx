@@ -16,7 +16,7 @@ export default function Sidebar({ isOpen, onClose }) {
     { path: '/challenges', icon: <img src="/fitness_sword_512.png" alt="challenges" style={{ width: '35px', height: '35px' }} />, label: t('nav.challenges') },
     { path: '/rewards', icon: <img src="/confidence_soul_fire_512.png" alt="rewards" style={{ width: '35px', height: '35px' }} />, label: t('nav.rewards') },
     { path: '/journal', icon: <img src="/wisdom_spellbook_512.png" alt="journal" style={{ width: '35px', height: '35px' }} />, label: t('nav.journal') },
-    { path: '/settings', icon: '⚙️', label: t('nav.settings') },
+    { path: '/settings', icon: <img src="/setting_512.png" alt="settings" style={{ width: '35px', height: '35px' }} />, label: t('nav.settings') },
   ];
 
   return (
@@ -47,7 +47,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
         <div className="sidebar__footer">
           <button className="sidebar__logout" onClick={logout}>
-            <span className="sidebar__link-icon">🚪</span>
+            <span className="sidebar__link-icon"><img src="/breakthrough_gate_512.png" alt="logout" style={{ width: '35px', height: '35px' }} /></span>
             <span>{t('auth.logout')}</span>
           </button>
         </div>

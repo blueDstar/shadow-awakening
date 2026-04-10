@@ -49,7 +49,10 @@
     "markComplete": "Mark as Complete",
     "markFailed": "Mark as Failed",
     "refreshQuests": "Call for New Trials",
-    "refreshing": "Summoning..."
+    "refreshing": "Summoning...",
+    "showHistory": "Show today's history",
+    "hideHistory": "Hide today's history",
+    "allDoneForNow": "All quests done! Hit refresh to summon more challenges."
   },
   "stats": {
     "title": "Character Stats",

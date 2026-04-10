@@ -288,6 +288,68 @@
     display: block;
     margin-bottom: $space-4;
   }
+
+  &--pending {
+    padding: $space-8;
+    background: rgba($neon-purple, 0.04);
+    border: 1px dashed rgba($neon-purple, 0.2);
+    border-radius: $radius-lg;
+  }
+}
+
+// Quest History Toggle Section
+.quest-history-section {
+  margin-top: $space-8;
+}
+
+.quest-history-toggle {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  width: 100%;
+  padding: $space-3 $space-5;
+  background: rgba($neon-purple, 0.06);
+  border: 1px solid rgba($neon-purple, 0.2);
+  border-radius: $radius-lg;
+  color: $text-muted;
+  font-size: $font-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.5px;
+
+  &:hover {
+    background: rgba($neon-purple, 0.12);
+    border-color: rgba($neon-purple, 0.4);
+    color: $text-secondary;
+  }
+
+  &__icon {
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+}
+
+.quest-history-list {
+  margin-top: $space-4;
+  overflow: hidden;
+
+  .quest-group {
+    opacity: 0.75;
+  }
+
+  .quest-card {
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba($bg-primary, 0.25);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+  }
 }
 
 // Level Up Overlay
