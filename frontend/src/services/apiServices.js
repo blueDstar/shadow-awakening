@@ -120,3 +120,16 @@ export const rewardService = USE_MOCK ? {
   getAll: () => api.get('/api/rewards'),
   equip: (id) => api.post(`/api/rewards/${id}/equip`),
 };
+
+export const profileService = {
+  uploadImage: (type, file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post(`/api/profile/upload/${type}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+  getProfile: () => api.get('/api/profile/me'),
+};

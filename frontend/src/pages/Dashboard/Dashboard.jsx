@@ -74,7 +74,10 @@ export default function Dashboard() {
   if (!data) return null;
 
   return (
-    <div className="dashboard">
+    <div 
+      className="dashboard" 
+      style={data.background_url ? { backgroundImage: `url(${data.background_url})`, backgroundSize: 'cover', backgroundAttachment: 'fixed' } : {}}
+    >
       {/* Header */}
       <motion.div
         className="dashboard__header"
@@ -95,6 +98,7 @@ export default function Dashboard() {
       {/* Character Card */}
       <motion.div
         className="dashboard__character-card"
+        style={data.cover_url ? { backgroundImage: `url(${data.cover_url})` } : {}}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
@@ -103,7 +107,12 @@ export default function Dashboard() {
         <div className="character-info">
           <div className="character-info__avatar">
             <div className="character-info__avatar-glow" />
-            <img src="/main_app_logo_1024.png" alt="Avatar" className="character-info__avatar-icon" style={{width: '64px', height: '64px', objectFit: 'contain', zIndex: 2}} />
+            <img 
+              src={data.avatar_url || '/main_app_logo_1024.png'} 
+              alt="Avatar" 
+              className="character-info__avatar-icon" 
+              style={{width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', zIndex: 2}} 
+            />
           </div>
           <div className="character-info__details">
             <h2 className="character-info__name">{data.character_name}</h2>
