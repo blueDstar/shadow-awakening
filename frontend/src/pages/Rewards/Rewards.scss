@@ -18,23 +18,23 @@
   text-align: center;
   padding: $space-8 $space-4;
   border-top: 3px solid var(--rarity-color);
+  transition: all $transition-base;
 
   &--locked { opacity: 0.5; filter: grayscale(0.6); }
 
   &__icon { font-size: 2.5rem; display: block; margin-bottom: $space-3; }
   h3 { color: $text-primary; font-size: $font-base; margin-bottom: $space-2; }
-  &__desc { color: $text-secondary; font-size: $font-sm; margin-bottom: $space-3; line-height: 1.4; display: none; }
-  &:hover &__desc { display: block; }
-  &__type { font-size: $font-xs; color: $text-muted; display: block; margin-bottom: $space-2; text-transform: uppercase; letter-spacing: 1px; }
-  
-  &__bottom {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: $space-3;
-  }
+  &__desc { color: $text-secondary; font-size: $font-sm; margin-bottom: $space-3; line-height: 1.4; }
+  &__type { font-size: $font-xs; color: $text-muted; display: block; text-transform: uppercase; letter-spacing: 1px; }
   
   &__rarity { font-size: $font-xs; font-weight: $font-weight-semibold; text-transform: uppercase; letter-spacing: 1px; }
+
+  &__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: $space-4;
+  }
 
   &__equip-btn {
     @include button-ghost;
@@ -45,6 +45,49 @@
 
     &:hover {
       background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  // Mobile specific accordion styles
+  @include responsive($bp-sm) {
+    padding: $space-4;
+    text-align: left;
+
+    &__header {
+      display: flex;
+      align-items: center;
+      gap: $space-4;
+    }
+
+    &__icon {
+      font-size: 1.8rem;
+      margin-bottom: 0;
+    }
+
+    &__title-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: $space-1;
+    }
+
+    h3 {
+      margin-bottom: 0;
+      font-size: $font-base;
+    }
+
+    &__details {
+      margin-top: $space-4;
+      padding-top: $space-4;
+      border-top: 1px solid rgba($purple-500, 0.1);
+    }
+
+    &__arrow {
+      color: $text-muted;
+      font-size: 0.8rem;
+      transition: transform $transition-base;
+      
+      &.up { transform: rotate(180deg); }
     }
   }
 }

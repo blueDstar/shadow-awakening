@@ -7,23 +7,74 @@
 
 .challenge-item {
   @include card(true);
-  display: flex;
-  align-items: center;
-  gap: $space-5;
   padding: $space-5 $space-6;
+  transition: all $transition-base;
 
-  @include responsive($bp-sm) {
-    flex-direction: column;
-    text-align: center;
-    padding: $space-5;
+  &--active {
+    border-left: 3px solid $neon-purple;
   }
 
   &__icon { font-size: 2rem; }
-  &__info { flex: 1; }
-  &__info h3 { color: $text-primary; font-size: $font-base; margin-bottom: $space-2; }
-  &__desc { color: $text-secondary; font-size: $font-sm; margin-bottom: $space-3; line-height: 1.5; overflow: hidden; }
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $space-5;
+  }
 
-  &__bar { width: 100%; height: 8px; background: rgba($neon-purple, 0.1); border-radius: $radius-full; overflow: hidden; margin-bottom: $space-1; }
+  &__title-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    
+    h3 { color: $text-primary; font-size: $font-base; margin: 0; }
+  }
+
+  &__bar-container {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+  }
+
+  &__bar { flex: 1; height: 8px; background: rgba($neon-purple, 0.1); border-radius: $radius-full; overflow: hidden; }
   &__fill { height: 100%; background: linear-gradient(90deg, $neon-purple, $neon-green); border-radius: $radius-full; box-shadow: 0 0 8px rgba($neon-purple, 0.4); transition: width 0.5s ease; }
-  &__progress { font-size: $font-xs; color: $text-muted; }
+  &__progress { font-size: $font-xs; color: $text-muted; white-space: nowrap; }
+
+  &__details {
+    margin-top: $space-4;
+    padding-top: $space-4;
+    border-top: 1px solid rgba($purple-500, 0.1);
+  }
+
+  &__desc { color: $text-secondary; font-size: $font-sm; line-height: 1.5; }
+
+  @include responsive($bp-sm) {
+    padding: $space-4;
+    
+    &__header {
+      gap: $space-4;
+    }
+
+    &__icon {
+      font-size: 1.5rem;
+    }
+
+    &__bar-container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $space-1;
+    }
+
+    &__bar {
+      width: 100%;
+    }
+
+    &__arrow {
+      color: $text-muted;
+      font-size: 0.8rem;
+      transition: transform $transition-base;
+      &.up { transform: rotate(180deg); }
+    }
+  }
 }

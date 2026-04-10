@@ -21,6 +21,7 @@
   @include card(true);
   text-align: center;
   padding: $space-8 $space-5;
+  transition: all $transition-base;
 
   &--locked {
     opacity: 0.6;
@@ -29,7 +30,9 @@
 
   &__icon { font-size: 2.5rem; margin-bottom: $space-3; }
   &__name { font-size: $font-lg; color: $text-primary; font-weight: $font-weight-semibold; margin-bottom: $space-2; }
-  &__condition { font-size: $font-xs; color: $text-muted; margin-bottom: $space-3; }
+  &__condition { font-size: $font-xs; color: $text-muted; margin-top: $space-2; }
+  &__desc { font-size: $font-sm; color: $text-secondary; line-height: 1.5; margin-bottom: $space-3; }
+  
   &__status {
     display: inline-block;
     font-size: $font-xs;
@@ -41,6 +44,49 @@
     &.unlocked {
       background: rgba($success, 0.1);
       color: $success;
+    }
+  }
+
+  // Mobile specific accordion styles
+  @include responsive($bp-sm) {
+    padding: $space-4;
+    text-align: left;
+
+    &__header {
+      display: flex;
+      align-items: center;
+      gap: $space-4;
+    }
+
+    &__icon {
+      font-size: 1.8rem;
+      margin-bottom: 0;
+    }
+
+    &__title-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: $space-1;
+    }
+
+    &__name {
+      margin-bottom: 0px;
+      font-size: $font-base;
+    }
+
+    &__details {
+      margin-top: $space-4;
+      padding-top: $space-4;
+      border-top: 1px solid rgba($purple-500, 0.1);
+    }
+
+    &__arrow {
+      color: $text-muted;
+      font-size: 0.8rem;
+      transition: transform $transition-base;
+      
+      &.up { transform: rotate(180deg); }
     }
   }
 }

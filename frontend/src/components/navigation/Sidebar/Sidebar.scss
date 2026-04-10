@@ -154,9 +154,21 @@
     transform: translateX(-100%);
     width: $sidebar-width;
     transition: transform $transition-base;
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
 
     &.open {
       transform: translateX(0);
+      
+      .sidebar__logo-text,
+      .sidebar__link-text,
+      .sidebar__logout span:last-child {
+        display: flex; // Force display on mobile when open
+      }
+      
+      .sidebar__logo,
+      .sidebar__link {
+        justify-content: flex-start;
+      }
     }
   }
 }

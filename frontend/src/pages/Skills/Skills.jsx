@@ -23,7 +23,22 @@ export default function Skills() {
     fetchSkills();
   }, []);
 
+  const [expandedId, setExpandedId] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   if (loading) return <div className="skills-loading">{t('common.loading')}</div>;
+
+  const toggleExpand = (id) => {
+    if (isMobile) {
+      setExpandedId(expandedId === id ? null : id);
+    }
+  };
 
   const formatCondition = (conditionStr) => {
     if (!conditionStr) return t('skills.none');
@@ -49,25 +64,45 @@ export default function Skills() {
         {skills.map((skill, i) => {
           const name = i18n.language === 'en' ? skill.name_en : skill.name_vi;
           const description = i18n.language === 'en' ? skill.description_en : skill.description_vi;
+          const isExpanded = !isMobile || expandedId === skill.id;
           
           return (
             <motion.div
               key={skill.id}
-              className={`skill-card ${skill.is_locked ? 'skill-card--locked' : ''}`}
+              className={`skill-card ${skill.is_locked ? 'skill-card--locked' : ''} ${isExpanded ? 'skill-card--expanded' : 'skill-card--collapsed'}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
+              onClick={() => toggleExpand(skill.id)}
             >
-              <div className="skill-card__icon">{skill.icon}</div>
-              <h3 className="skill-card__name">{name}</h3>
-              <p className="skill-card__desc">{description}</p>
-              <p className="skill-card__condition">
-                <strong>{t('skills.unlockCondition') || 'Yêu cầu'}: </strong> 
-                {formatCondition(skill.unlock_condition)}
-              </p>
-              <span className={`skill-card__status ${skill.is_locked ? '' : 'unlocked'}`}>
-                {skill.is_locked ? `🔒 ${t('skills.locked')}` : `✅ ${t('skills.unlocked')}`}
-              </span>
+              <div className="skill-card__header">
+                <div className="skill-card__icon">{skill.icon}</div>
+                <div className="skill-card__title-group">
+                  <h3 className="skill-card__name">{name}</h3>
+                  <span className={`skill-card__status ${skill.is_locked ? '' : 'unlocked'}`}>
+                    {skill.is_locked ? `🔒 ${t('skills.locked')}` : `✅ ${t('skills.unlocked')}`}
+                  </span>
+                </div>
+                {isMobile && (
+                  <span className={`skill-card__arrow ${isExpanded ? 'up' : 'down'}`}>
+                    {isExpanded ? '▲' : '▼'}
+                  </span>
+                )}
+              </div>
+
+              {(isExpanded) && (
+                <motion.div 
+                  className="skill-card__details"
+                  initial={isMobile ? { height: 0, opacity: 0 } : false}
+                  animate={{ height: 'auto', opacity: 1 }}
+                >
+                  <p className="skill-card__desc">{description}</p>
+                  <p className="skill-card__condition">
+                    <strong>{t('skills.unlockCondition') || 'Yêu cầu'}: </strong> 
+                    {formatCondition(skill.unlock_condition)}
+                  </p>
+                </motion.div>
+              )}
             </motion.div>
           );
         })}
