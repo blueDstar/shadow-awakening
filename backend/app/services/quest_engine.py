@@ -195,6 +195,7 @@ async def generate_daily_quests(db: AsyncSession, user: User, target_date: Optio
         daily_quests.append(dq)
     
     await db.flush()
+    await db.commit()  # Persist generated quests to PostgreSQL
     return daily_quests
 
 
@@ -272,6 +273,7 @@ async def refresh_daily_quests(db: AsyncSession, user: User, target_date: Option
         new_entities.append(dq)
         
     await db.flush()
+    await db.commit()  # Persist refreshed quests to PostgreSQL
     return existing_quests + new_entities
 
 

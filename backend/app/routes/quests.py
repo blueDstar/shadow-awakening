@@ -144,9 +144,15 @@ async def complete_quest(
     db: AsyncSession = Depends(get_db),
 ):
     """Mark a quest as completed and award EXP + stats."""
+    import uuid as uuid_lib
+    try:
+        q_uuid = uuid_lib.UUID(quest_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid quest ID")
+
     result = await db.execute(
         select(DailyQuest).where(
-            and_(DailyQuest.id == quest_id, DailyQuest.user_id == user.id)
+            and_(DailyQuest.id == q_uuid, DailyQuest.user_id == user.id)
         )
     )
     quest = result.scalar_one_or_none()
@@ -226,7 +232,7 @@ async def complete_quest(
     # Check for Skills, Challenges, and Rewards!
     await check_all_progress(db, user.id)
     
-    await db.flush()
+    await db.commit()  # CRITICAL: persist to PostgreSQL
     
     return {
         "status": "completed",
@@ -246,9 +252,15 @@ async def fail_quest(
     db: AsyncSession = Depends(get_db),
 ):
     """Mark a quest as failed."""
+    import uuid as uuid_lib
+    try:
+        q_uuid = uuid_lib.UUID(quest_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid quest ID")
+
     result = await db.execute(
         select(DailyQuest).where(
-            and_(DailyQuest.id == quest_id, DailyQuest.user_id == user.id)
+            and_(DailyQuest.id == q_uuid, DailyQuest.user_id == user.id)
         )
     )
     quest = result.scalar_one_or_none()
@@ -258,7 +270,7 @@ async def fail_quest(
     
     quest.status = "failed"
     quest.fail_reason = fail_reason
-    await db.flush()
+    await db.commit()  # CRITICAL: persist to PostgreSQL
     
     return {"status": "failed", "fail_reason": fail_reason}
 
