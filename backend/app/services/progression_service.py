@@ -90,7 +90,6 @@ async def _check_skill_unlocks(db: AsyncSession, character: Character):
             new_us = UserSkill(
                 user_id=character.user_id,
                 skill_id=skill.id,
-                level=1,
                 unlocked_at=datetime.utcnow()
             )
             db.add(new_us)

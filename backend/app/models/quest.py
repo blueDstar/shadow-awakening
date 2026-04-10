@@ -47,7 +47,7 @@ class DailyQuest(Base):
     completed_at = Column(DateTime, nullable=True)
     chain_parent_id = Column(UUID(as_uuid=True), ForeignKey("daily_quests.id"), nullable=True)
     fail_reason = Column(String(50), nullable=True)
-    is_rerolled = Column(Boolean, default=False)
+    # is_rerolled = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="daily_quests")
