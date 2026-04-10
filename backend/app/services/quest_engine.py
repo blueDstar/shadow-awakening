@@ -461,9 +461,17 @@ def _find_weak_stats(stats: dict, cap: int) -> List[str]:
         if val < threshold:
             weak.append(stat_name)
     random.shuffle(weak)
+    
     if not weak:
-        weak = list(CORE_STATS)
+        # Nếu không có stat nào yếu (cơ bản < 40%), ưu tiên chọn các stat chưa đạt tối đa (max cap)
+        weak = [s for s in CORE_STATS if stats.get(s, 0) < cap]
         random.shuffle(weak)
+        
+        # Nếu TẤT CẢ các stat đều đã đạt tối đa, thì mới chia đều cho tất cả
+        if not weak:
+            weak = list(CORE_STATS)
+            random.shuffle(weak)
+            
     return weak
 
 
