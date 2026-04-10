@@ -281,7 +281,18 @@ export default function DailyQuests() {
           ? renderQuestGroup(groupedPending, pendingQuests)
           : (
             <div className="no-quests no-quests--pending">
-              <span className="no-quests__icon"><img src="/complete_quest512.png" alt="complete" style={{ width: '35px', height: '35px' }} /></span>
+              <span className="no-quests__icon">
+                <img
+                  src="/complete_quest512.png"
+                  alt="complete"
+                  style={{
+                    width: '50px',
+                    height: '50px',
+                    display: 'block',
+                    margin: '0 auto'
+                  }}
+                />
+              </span>
               <p>{doneQuests.length > 0 ? t('quests.allDoneForNow') : t('quests.noQuests')}</p>
             </div>
           )
