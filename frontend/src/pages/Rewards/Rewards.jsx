@@ -15,6 +15,18 @@ export default function Rewards() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
+    const fetchRewards = async () => {
+      try {
+        const response = await rewardService.getAll();
+        setRewards(response.data);
+      } catch (error) {
+        console.error('Failed to fetch rewards:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRewards();
+
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
