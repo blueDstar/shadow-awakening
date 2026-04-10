@@ -222,8 +222,13 @@ async def refresh_daily_quests(db: AsyncSession, user: User, target_date: Option
     completion_rate = await _get_7d_completion_rate(db, user.id, today)
     difficulty = min(50, int(existing_quests[0].difficulty * 1.1) + 1)
     
-    completed_cats = [q.category for q in existing_quests if q.status == "completed"]
-    dominant_cat = random.choice(completed_cats) if completed_cats else "wisdom"
+    stats_dict = await _get_stats(db, character.id if character else None)
+    stat_cap = await _get_stat_cap(db, character.id if character else None)
+    cap = stat_cap.current_cap if stat_cap else 100
+    weak_stats = _find_weak_stats(stats_dict, cap)
+    allowed_categories = list({_stat_to_category(s) for s in weak_stats})
+    
+    dominant_cat = random.choice(allowed_categories) if allowed_categories else "wisdom"
     
     templates_pool = await _get_quest_templates(db)
     new_quest_data = []
@@ -234,7 +239,9 @@ async def refresh_daily_quests(db: AsyncSession, user: User, target_date: Option
         for template in selected_related:
             new_quest_data.append(_build_quest_from_template(template, difficulty, level, "side"))
         
-    fitness_templates = templates_pool.get("fitness", [])
+    alt_cats = [c for c in allowed_categories if c != dominant_cat]
+    alt_cat = random.choice(alt_cats) if alt_cats else dominant_cat
+    fitness_templates = templates_pool.get(alt_cat, templates_pool.get("fitness", []))
     if fitness_templates:
         template = random.choice(fitness_templates)
         new_quest_data.append(_build_quest_from_template(template, difficulty, level, "side"))
@@ -598,11 +605,18 @@ async def reroll_daily_quest(db: AsyncSession, user: User, quest_id: uuid.UUID) 
     )
     active_titles = {q.title_vi for q in existing_quests_result.scalars().all()}
     
+    stats_dict = await _get_stats(db, character.id if character else None)
+    stat_cap = await _get_stat_cap(db, character.id if character else None)
+    cap = stat_cap.current_cap if stat_cap else 100
+    weak_stats = _find_weak_stats(stats_dict, cap)
+    allowed_categories = list({_stat_to_category(s) for s in weak_stats})
+    
     templates_pool = await _get_quest_templates(db)
     all_categories = list(templates_pool.keys())
-    other_categories = [c for c in all_categories if c != old_quest.category]
+    
+    other_categories = [c for c in allowed_categories if c != old_quest.category]
     if not other_categories:
-        other_categories = all_categories
+        other_categories = allowed_categories if allowed_categories else all_categories
         
     available_templates = []
     
