@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { questService } from '../../services/apiServices';
+import BreakthroughModal from '../../components/modals/BreakthroughModal/BreakthroughModal';
 import './DailyQuests.scss';
 
 const QUEST_TYPE_COLORS = {
@@ -24,6 +25,7 @@ export default function DailyQuests() {
   const [levelUp, setLevelUp] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [isBreakthroughOpen, setIsBreakthroughOpen] = useState(false);
 
   useEffect(() => { loadQuests(); }, []);
 
@@ -255,6 +257,21 @@ export default function DailyQuests() {
         </div>
       </motion.div>
 
+      {questData?.breakthrough_available && (
+        <motion.div 
+          className="bt-alert-banner" 
+          initial={{ opacity: 0, y: -10 }} 
+          animate={{ opacity: 1, y: 0 }}
+          onClick={() => setIsBreakthroughOpen(true)}
+        >
+          <div className="bt-alert-banner__content">
+            <span className="bt-alert-banner__icon">⚡</span>
+            <span className="bt-alert-banner__text">{t('stats.breakthroughAvailable')}</span>
+          </div>
+          <span className="bt-alert-banner__action">{t('common.next')} ➔</span>
+        </motion.div>
+      )}
+
       {(questData?.can_refresh || questData?.day_completed) && (
         <motion.div
           className="day-completed-banner"
@@ -328,6 +345,15 @@ export default function DailyQuests() {
           </AnimatePresence>
         </div>
       )}
+      
+      <BreakthroughModal 
+        isOpen={isBreakthroughOpen}
+        onClose={() => setIsBreakthroughOpen(false)}
+        onComplete={() => {
+          setLoading(true);
+          loadQuests();
+        }}
+      />
     </div>
   );
 }

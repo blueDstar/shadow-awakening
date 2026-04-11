@@ -24,6 +24,18 @@
   margin-bottom: $space-6;
   text-align: center;
   animation: pulseGlow 2s infinite;
+
+  &.clickable {
+    cursor: pointer;
+    transition: all 0.3s;
+    &:hover {
+      transform: translateY(-2px);
+      background: rgba($neon-gold, 0.15);
+      border-color: rgba($neon-gold, 0.6);
+      box-shadow: 0 5px 15px rgba($neon-gold, 0.2);
+    }
+    &:active { transform: translateY(0); }
+  }
 }
 
 .stats-info {

@@ -6,7 +6,7 @@ from sqlalchemy import select, and_
 
 from app.db.database import get_db
 from app.core.deps import get_current_user
-from app.models import User, DailyQuest, QuestHistory, Character, ExperienceLog, Streak
+from app.models import User, DailyQuest, QuestHistory, Character, ExperienceLog, Streak, StatCap
 from app.services.quest_engine import generate_daily_quests
 from app.services.stat_service import update_stats
 from app.services.streak_service import update_streak
@@ -25,6 +25,13 @@ async def get_today_quests(
     """Get or generate today's quests."""
     target_date = date.fromisoformat(client_date) if client_date else date.today()
     quests = await generate_daily_quests(db, user, target_date)
+    
+    char_result = await db.execute(select(Character).where(Character.user_id == user.id))
+    character = char_result.scalar_one_or_none()
+    stat_cap = None
+    if character:
+        cap_result = await db.execute(select(StatCap).where(StatCap.character_id == character.id))
+        stat_cap = cap_result.scalar_one_or_none()
     
     total = len(quests)
     completed = sum(1 for q in quests if q.status == "completed")
@@ -57,6 +64,7 @@ async def get_today_quests(
         "day_completed": completed == total and total > 0,
         "can_refresh": all(q.status != "pending" for q in quests) and total > 0,
         "quest_date": str(target_date),
+        "breakthrough_available": stat_cap.breakthrough_available if stat_cap else False,
     }
 
 

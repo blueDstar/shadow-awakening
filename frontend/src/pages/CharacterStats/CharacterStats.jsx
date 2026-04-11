@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { statsService } from '../../services/apiServices';
+import BreakthroughModal from '../../components/modals/BreakthroughModal/BreakthroughModal';
 import './CharacterStats.scss';
 
 const STAT_COLORS = {
@@ -27,6 +28,7 @@ export default function CharacterStats() {
   const { t } = useTranslation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isBreakthroughOpen, setIsBreakthroughOpen] = useState(false);
 
   useEffect(() => {
     statsService.getAll()
@@ -46,7 +48,12 @@ export default function CharacterStats() {
       <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t('stats.title')}</motion.h1>
 
       {data?.breakthrough_available && (
-        <motion.div className="bt-alert" initial={{ scale: 0.9 }} animate={{ scale: 1 }}>
+        <motion.div 
+          className="bt-alert clickable" 
+          initial={{ scale: 0.9 }} 
+          animate={{ scale: 1 }}
+          onClick={() => setIsBreakthroughOpen(true)}
+        >
           ⚡ {t('stats.breakthroughAvailable')}
         </motion.div>
       )}
@@ -87,6 +94,17 @@ export default function CharacterStats() {
           </motion.div>
         ))}
       </div>
+      
+      <BreakthroughModal 
+        isOpen={isBreakthroughOpen}
+        onClose={() => setIsBreakthroughOpen(false)}
+        onComplete={() => {
+          setLoading(true);
+          statsService.getAll()
+            .then(res => setData(res.data))
+            .finally(() => setLoading(false));
+        }}
+      />
     </div>
   );
 }
