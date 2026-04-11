@@ -24,20 +24,24 @@ class AssetSelection(BaseModel):
 @router.get("/assets")
 async def get_available_assets():
     """List available pre-defined assets for profile."""
-    # These are relative to frontend's public folder
+    # Avatars 1-5 (Female and Male)
     avatars = [
-        "/avatar/avatar_female_1.png", "/avatar/avatar_female_2.png", "/avatar/avatar_female_3.png", 
-        "/avatar/avatar_female_4.png", "/avatar/avatar_female_5.png",
-        "/avatar/avatar_male_1.png", "/avatar/avatar_male_2.png", "/avatar/avatar_male_3.png", 
-        "/avatar/avatar_male_4.png", "/avatar/avatar_male_5.png"
+        f"/avatar/avatar_female_{i}.png" for i in range(1, 6)
+    ] + [
+        f"/avatar/avatar_male_{i}.png" for i in range(1, 6)
     ]
+    
+    # Backgrounds/Banners 1-5 (Female and Male)
     backgrounds = [
-        "/background/banner_male_3.png", "/background/banner_male_4.png"
+        f"/background/banner_female_{i}.png" for i in range(1, 6)
+    ] + [
+        f"/background/banner_male_{i}.png" for i in range(1, 6)
     ]
+    
     return {
         "avatars": avatars,
         "backgrounds": backgrounds,
-        "covers": backgrounds # Using backgrounds as covers for now
+        "covers": backgrounds # Using backgrounds as covers too
     }
 
 @router.post("/set-asset")

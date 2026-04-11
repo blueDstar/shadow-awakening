@@ -95,6 +95,20 @@ export default function DailyQuests() {
     );
   }
 
+  if (!questData) {
+    return (
+      <div className="quests-error">
+        <div className="error-content">
+          <h2>🚫 {t('common.error') || 'Shadow Connection Lost'}</h2>
+          <p>Hệ thống không thể tải danh sách nhiệm vụ. Vui lòng thử lại sau.</p>
+          <button className="retry-btn" onClick={() => { setLoading(true); loadQuests(); }}>
+            🔄 Thử lại
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const allQuests = questData?.quests || [];
 
   // Split into pending vs done

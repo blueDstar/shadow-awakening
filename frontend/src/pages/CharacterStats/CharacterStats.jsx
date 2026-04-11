@@ -38,6 +38,20 @@ export default function CharacterStats() {
   }, []);
 
   if (loading) return <div className="stats-loading"><div className="spinner" /><p>{t('common.loading')}</p></div>;
+  
+  if (!data) {
+    return (
+      <div className="stats-error">
+        <div className="error-content">
+          <h2>🚫 {t('common.error') || 'Shadow Connection Lost'}</h2>
+          <p>Hệ thống không thể tải thông tin chỉ số. Vui lòng thử lại sau.</p>
+          <button className="retry-btn" onClick={() => { setLoading(true); statsService.getAll().then(res => setData(res.data)).finally(() => setLoading(false)); }}>
+            🔄 Thử lại
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const stats = data?.stats || [];
   const core = stats.filter(s => ['wisdom','confidence','strength','discipline','focus'].includes(s.stat_name));

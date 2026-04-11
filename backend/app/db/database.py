@@ -28,18 +28,24 @@ from sqlalchemy import text
 async def sync_database_schema():
     """Automatically add missing columns to prevent crashes on production."""
     async with engine.begin() as conn:
-        try:
-            # Characters table: Add image URLs
-            await conn.execute(text("ALTER TABLE characters ADD COLUMN IF NOT EXISTS avatar_url VARCHAR"))
-            await conn.execute(text("ALTER TABLE characters ADD COLUMN IF NOT EXISTS cover_url VARCHAR"))
-            await conn.execute(text("ALTER TABLE characters ADD COLUMN IF NOT EXISTS background_url VARCHAR"))
-            
-            # StatCaps table: Ensure it exists (create_all will do this, but just in case)
-            # BreakthroughRituals table: ensure primary key is UUID
-            
-            print("🌑 Database schema synchronized successfully.")
-        except Exception as e:
-            print(f"🌑 Database sync warning: {e}")
+        print("🌑 Starting database schema synchronization...")
+        
+        columns_to_add = [
+            ("characters", "avatar_url", "VARCHAR"),
+            ("characters", "cover_url", "VARCHAR"),
+            ("characters", "background_url", "VARCHAR"),
+        ]
+
+        for table, column, col_type in columns_to_add:
+            try:
+                # PostgreSQL specific check for column existence before adding
+                # ADD COLUMN IF NOT EXISTS is cleaner but let's be super explicit
+                await conn.execute(text(f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {column} {col_type}"))
+                print(f"🌑 Column '{column}' checked/added to table '{table}'.")
+            except Exception as e:
+                print(f"🌑 Warning sync column '{column}': {e}")
+        
+        print("🌑 Database schema synchronization completed.")
 
 
 async def init_db():
