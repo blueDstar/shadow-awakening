@@ -260,8 +260,8 @@ export default function DailyQuests() {
       {questData?.breakthrough_available && (
         <motion.div 
           className="bt-alert-banner" 
-          initial={{ opacity: 0, scale: 0.95 }} 
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: -20 }} 
+          animate={{ opacity: 1, y: 0 }}
           onClick={() => setIsBreakthroughOpen(true)}
         >
           <div className="bt-alert-banner__content">

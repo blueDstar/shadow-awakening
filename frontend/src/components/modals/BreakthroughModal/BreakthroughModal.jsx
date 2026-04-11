@@ -76,11 +76,8 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="breakthrough-modal__header">
-            <h2>{ritual ? (isVi ? ritual.title_vi : ritual.title_en) : t('breakthrough.title')}</h2>
-            <button className="close-btn" onClick={onClose}>&times;</button>
-          </div>
-
+          <button className="breakthrough-modal__close-btn" onClick={onClose}>&times;</button>
+          
           <div className="breakthrough-modal__body">
             {loading ? (
               <div className="loading-spinner" />
