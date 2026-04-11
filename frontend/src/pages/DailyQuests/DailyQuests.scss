@@ -30,6 +30,8 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: $space-8;
+    flex-wrap: wrap;
+    gap: $space-4;
 
     @include responsive($bp-sm) {
       flex-direction: column;
@@ -130,7 +132,8 @@
   background: linear-gradient(90deg, rgba($neon-gold, 0.15), rgba($neon-purple, 0.15));
   border: 1px solid rgba($neon-gold, 0.4);
   border-radius: $radius-lg;
-  margin-bottom: $space-6;
+  margin-bottom: $space-8;
+  margin-top: $space-2;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
