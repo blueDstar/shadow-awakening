@@ -83,7 +83,7 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
   return (
     <AnimatePresence>
       <div className="breakthrough-overlay" onClick={onClose}>
-        <motion.div 
+        <motion.div
           className="breakthrough-modal"
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -91,7 +91,7 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
           onClick={(e) => e.stopPropagation()}
         >
           <button className="breakthrough-modal__close-btn" onClick={onClose}>&times;</button>
-          
+
           <div className="breakthrough-modal__body">
             {loading ? (
               <div className="loading-spinner" />
@@ -140,8 +140,8 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
                   <h4><span className="icon">🌟</span> {t('breakthrough.optionalPaths')}</h4>
                   <div className="options-grid">
                     {ritual.options?.map((opt) => (
-                      <div 
-                        key={opt.id} 
+                      <div
+                        key={opt.id}
                         className={`option-card ${trial.selected_option_id === opt.id ? 'active' : ''}`}
                         onClick={() => !trial.selected_option_id && handleSelectOption(opt.id)}
                       >
@@ -153,8 +153,8 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
                   </div>
                 </section>
 
-                <button 
-                  className="complete-btn" 
+                <button
+                  className="complete-btn"
                   disabled={submitting}
                   onClick={handleComplete}
                 >
