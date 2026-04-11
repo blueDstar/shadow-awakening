@@ -55,6 +55,7 @@ def _format_ritual(ritual: BreakthroughRitual):
         "id": str(ritual.id),
         "phase": ritual.phase,
         "title_vi": ritual.title_vi,
+        "title_en": ritual.title_en,
         "aura_name": ritual.aura_name,
         "foundation": json.loads(ritual.foundation_req),
         "mandatory": json.loads(ritual.mandatory_reqs),

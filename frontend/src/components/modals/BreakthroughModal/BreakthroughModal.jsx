@@ -5,7 +5,7 @@ import { breakthroughService } from '../../../services/apiServices';
 import './BreakthroughModal.scss';
 
 export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -64,6 +64,7 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
   const ritual = data?.ritual_template;
   const trial = data?.active_trial;
   const isAvailable = data?.available && !trial;
+  const isVi = i18n.language === 'vi';
 
   return (
     <AnimatePresence>
@@ -76,7 +77,7 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="breakthrough-modal__header">
-            <h2>{ritual ? ritual.title_vi : t('breakthrough.title')}</h2>
+            <h2>{ritual ? (isVi ? ritual.title_vi : ritual.title_en) : t('breakthrough.title')}</h2>
             <button className="close-btn" onClick={onClose}>&times;</button>
           </div>
 
@@ -87,27 +88,31 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
               <div className="start-phase">
                 <div className="ritual-preview">
                   <div className={`aura-preview aura-${ritual?.aura_name}`} />
-                  <h3>Giai đoạn {data.next_phase}: {ritual?.title_vi}</h3>
-                  <p>Mở rộng giới hạn chỉ số lên 20%. Bạn sẽ giữ lại 30% sức mạnh hiện tại để bước vào cảnh giới mới.</p>
+                  <img src="/breakthrough_gate_512.png" alt="Gate" className="ritual-gate-img" />
+                  <h3>{isVi ? ritual?.title_vi : ritual?.title_en}</h3>
+                  <div className="unlock-label">
+                    {t('breakthrough.performToUnlock')}: {data.next_phase}
+                  </div>
+                  <p>{t('breakthrough.evolutionWarning')}</p>
                 </div>
                 <button className="start-btn" onClick={handleStart}>
-                  Bắt đầu Nghi thức
+                  {t('breakthrough.start')}
                 </button>
               </div>
             ) : trial ? (
               <div className="ritual-progress">
                 {/* Foundation */}
                 <section className="ritual-section">
-                  <h4><span className="icon">🛡️</span> Điều kiện nền</h4>
+                  <h4><span className="icon">🛡️</span> {t('breakthrough.foundation')}</h4>
                   <div className="requirement-item">
-                    <span>{t(`breakthrough.req.${ritual.foundation.type}`)}: {ritual.foundation.target} ngày</span>
+                    <span>{t(`breakthrough.req.${ritual.foundation.type}`)}: {ritual.foundation.target} {t('streak.days')}</span>
                     <span className="status">{trial.progress.streak >= ritual.foundation.target ? '✅' : '⏳'}</span>
                   </div>
                 </section>
 
                 {/* Mandatory */}
                 <section className="ritual-section">
-                  <h4><span className="icon">⚔️</span> Nhiệm vụ bắt buộc</h4>
+                  <h4><span className="icon">⚔️</span> {t('breakthrough.mandatory')}</h4>
                   {ritual.mandatory.map((req, i) => (
                     <div key={i} className="requirement-item">
                       <span>{t(`breakthrough.req.${req.type}`)}: {trial.progress[req.type] || 0}/{req.target}</span>
@@ -115,14 +120,14 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
                     </div>
                   ))}
                   <div className="requirement-item">
-                    <span>Bài viết Reflection ở Tab Nhật ký</span>
+                    <span>{t('breakthrough.reflectionAtJournal')}</span>
                     <span className="status">{trial.progress.reflection_done ? '✅' : '📝'}</span>
                   </div>
                 </section>
 
                 {/* Optional Paths */}
                 <section className="ritual-section">
-                  <h4><span className="icon">🌟</span> Chọn 1 trong 3 con đường</h4>
+                  <h4><span className="icon">🌟</span> {t('breakthrough.optionalPaths')}</h4>
                   <div className="options-grid">
                     {ritual.options.map((opt) => (
                       <div 
@@ -130,9 +135,9 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
                         className={`option-card ${trial.selected_option_id === opt.id ? 'active' : ''}`}
                         onClick={() => !trial.selected_option_id && handleSelectOption(opt.id)}
                       >
-                        <h5>{opt.label_vi}</h5>
+                        <h5>{isVi ? opt.label_vi : opt.label_en}</h5>
                         <p>{t(`breakthrough.req.${opt.req.type}`)}: {opt.req.target}</p>
-                        {trial.selected_option_id === opt.id && <div className="selected-mark">Đã chọn</div>}
+                        {trial.selected_option_id === opt.id && <div className="selected-mark">{t('breakthrough.selected')}</div>}
                       </div>
                     ))}
                   </div>
@@ -143,7 +148,7 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
                   disabled={submitting}
                   onClick={handleComplete}
                 >
-                  {submitting ? 'Đang xác thực...' : 'Hoàn tất Nghi thức'}
+                  {submitting ? t('breakthrough.selecting') : t('breakthrough.complete')}
                 </button>
               </div>
             ) : (

@@ -189,6 +189,28 @@
       &.aura-dark_fire::after { background: #ff4d00; box-shadow: 0 0 30px #ff4d00; }
       &.aura-golden_aura::after { background: $neon-gold; box-shadow: 0 0 30px $neon-gold; }
     }
+
+    .ritual-gate-img {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 20px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 15px rgba($neon-gold, 0.4));
+      animation: float 4s infinite ease-in-out;
+    }
+
+    .unlock-label {
+      font-size: 0.85rem;
+      color: $neon-gold;
+      background: rgba($neon-gold, 0.1);
+      padding: 5px 15px;
+      border-radius: $radius-full;
+      margin-bottom: 20px;
+      font-weight: $font-weight-bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border: 1px solid rgba($neon-gold, 0.2);
+    }
     
     h3 { font-size: 1.8rem; margin: 0 0 15px 0; color: white; }
     p { color: rgba(white, 0.7); max-width: 400px; line-height: 1.6; }
@@ -226,4 +248,9 @@
 @keyframes pulse-aura {
   0%, 100% { transform: scale(1); opacity: 0.4; }
   50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
