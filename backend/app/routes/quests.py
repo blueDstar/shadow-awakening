@@ -16,23 +16,15 @@ from app.services.progression_service import check_all_progress
 router = APIRouter(prefix="/api/quests", tags=["quests"])
 
 
-@router.get("/today")
-async def get_today_quests(
-    client_date: str = None,
-    user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
-):
-    """Get or generate today's quests."""
-    target_date = date.fromisoformat(client_date) if client_date else date.today()
-    quests = await generate_daily_quests(db, user, target_date)
-    
-    char_result = await db.execute(select(Character).where(Character.user_id == user.id))
+async def _prepare_quest_response(db: AsyncSession, user_id: str, quests: list, target_date: date):
+    """Common helper to format quest response with breakthrough status."""
+    char_result = await db.execute(select(Character).where(Character.user_id == user_id))
     character = char_result.scalar_one_or_none()
     stat_cap = None
     if character:
         cap_result = await db.execute(select(StatCap).where(StatCap.character_id == character.id))
         stat_cap = cap_result.scalar_one_or_none()
-    
+        
     total = len(quests)
     completed = sum(1 for q in quests if q.status == "completed")
     failed = sum(1 for q in quests if q.status == "failed")
@@ -68,6 +60,18 @@ async def get_today_quests(
     }
 
 
+@router.get("/today")
+async def get_today_quests(
+    client_date: str = None,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Get or generate today's quests."""
+    target_date = date.fromisoformat(client_date) if client_date else date.today()
+    quests = await generate_daily_quests(db, user, target_date)
+    return await _prepare_quest_response(db, user.id, quests, target_date)
+
+
 @router.post("/refresh")
 async def refresh_quests(
     client_date: str = None,
@@ -79,39 +83,7 @@ async def refresh_quests(
     
     target_date = date.fromisoformat(client_date) if client_date else date.today()
     quests = await refresh_daily_quests(db, user, target_date)
-    
-    total = len(quests)
-    completed = sum(1 for q in quests if q.status == "completed")
-    failed = sum(1 for q in quests if q.status == "failed")
-    
-    return {
-        "quests": [
-            {
-                "id": str(q.id),
-                "title_vi": q.title_vi,
-                "title_en": q.title_en,
-                "description_vi": q.description_vi,
-                "description_en": q.description_en,
-                "quest_type": q.quest_type,
-                "category": q.category,
-                "difficulty": q.difficulty,
-                "exp_reward": q.exp_reward,
-                "stat_rewards": q.stat_rewards,
-                "status": q.status,
-                "quest_date": str(q.quest_date),
-                "completed_at": q.completed_at.isoformat() if q.completed_at else None,
-                "fail_reason": q.fail_reason,
-                "is_rerolled": q.is_rerolled,
-            }
-            for q in quests
-        ],
-        "total": total,
-        "completed": completed,
-        "failed": failed,
-        "day_completed": completed == total and total > 0,
-        "can_refresh": all(q.status != "pending" for q in quests) and total > 0,
-        "quest_date": str(target_date),
-    }
+    return await _prepare_quest_response(db, user.id, quests, target_date)
 
 
 @router.post("/{quest_id}/reroll")
