@@ -18,7 +18,16 @@ router = APIRouter(prefix="/api/quests", tags=["quests"])
 
 async def _prepare_quest_response(db: AsyncSession, user_id: str, quests: list, target_date: date):
     """Common helper to format quest response with breakthrough status."""
-    char_result = await db.execute(select(Character).where(Character.user_id == user_id))
+    from uuid import UUID
+    try:
+        if isinstance(user_id, str):
+            user_uuid = UUID(user_id)
+        else:
+            user_uuid = user_id
+    except:
+        user_uuid = user_id
+
+    char_result = await db.execute(select(Character).where(Character.user_id == user_uuid))
     character = char_result.scalar_one_or_none()
     stat_cap = None
     if character:

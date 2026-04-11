@@ -255,22 +255,24 @@ export default function DailyQuests() {
           </div>
           <span>{questData?.completed || 0} / {questData?.total || 0}</span>
         </div>
+        
+        {questData?.breakthrough_available && (
+          <motion.div 
+            className="bt-alert-banner" 
+            initial={{ opacity: 0, scale: 0.95 }} 
+            animate={{ opacity: 1, scale: 1 }}
+            onClick={() => setIsBreakthroughOpen(true)}
+            style={{ marginTop: '1rem', width: '100%' }}
+          >
+            <div className="bt-alert-banner__content">
+              <span className="bt-alert-banner__icon">⚡</span>
+              <span className="bt-alert-banner__text">{t('stats.breakthroughAvailable')}</span>
+            </div>
+            <span className="bt-alert-banner__action">{t('common.next')} ➔</span>
+          </motion.div>
+        )}
       </motion.div>
 
-      {questData?.breakthrough_available && (
-        <motion.div 
-          className="bt-alert-banner" 
-          initial={{ opacity: 0, y: -10 }} 
-          animate={{ opacity: 1, y: 0 }}
-          onClick={() => setIsBreakthroughOpen(true)}
-        >
-          <div className="bt-alert-banner__content">
-            <span className="bt-alert-banner__icon">⚡</span>
-            <span className="bt-alert-banner__text">{t('stats.breakthroughAvailable')}</span>
-          </div>
-          <span className="bt-alert-banner__action">{t('common.next')} ➔</span>
-        </motion.div>
-      )}
 
       {(questData?.can_refresh || questData?.day_completed) && (
         <motion.div
