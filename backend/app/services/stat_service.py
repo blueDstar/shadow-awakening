@@ -64,7 +64,7 @@ async def get_all_stats(db: AsyncSession, user_id) -> dict:
     result = await db.execute(select(Character).where(Character.user_id == user_id))
     character = result.scalar_one_or_none()
     if not character:
-        return {"stats": [], "current_cap": 100, "phase": 1, "breakthrough_available": False}
+        return {"stats": [], "stat_cap": 100, "phase": 1, "breakthrough_available": False}
     
     stats_result = await db.execute(select(UserStat).where(UserStat.character_id == character.id))
     stats = stats_result.scalars().all()
@@ -74,7 +74,7 @@ async def get_all_stats(db: AsyncSession, user_id) -> dict:
     
     return {
         "stats": [{"stat_name": s.stat_name, "current_value": s.current_value, "cap": stat_cap.current_cap if stat_cap else 100} for s in stats],
-        "current_cap": stat_cap.current_cap if stat_cap else 100,
+        "stat_cap": stat_cap.current_cap if stat_cap else 100,
         "phase": stat_cap.phase if stat_cap else 1,
         "breakthrough_available": stat_cap.breakthrough_available if stat_cap else False,
     }

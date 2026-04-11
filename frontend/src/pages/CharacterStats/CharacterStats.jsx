@@ -60,7 +60,7 @@ export default function CharacterStats() {
 
       <div className="stats-info">
         <span>{t('dashboard.phase')}: {data?.phase}</span>
-        <span>{t('stats.cap')}: {data?.current_cap}</span>
+        <span>{t('stats.cap')}: {data?.stat_cap}</span>
       </div>
 
       <h2>Core Stats</h2>
