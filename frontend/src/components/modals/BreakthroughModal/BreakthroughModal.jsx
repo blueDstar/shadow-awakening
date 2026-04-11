@@ -87,7 +87,6 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
             ) : isAvailable ? (
               <div className="start-phase">
                 <div className="ritual-preview">
-                  <div className={`aura-preview aura-${ritual?.aura_name}`} />
                   <img src="/breakthrough_gate_512.png" alt="Gate" className="ritual-gate-img" />
                   <h3>{isVi ? ritual?.title_vi : ritual?.title_en}</h3>
                   <div className="unlock-label">
