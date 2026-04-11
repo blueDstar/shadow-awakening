@@ -165,15 +165,16 @@ async def generate_daily_quests(db: AsyncSession, user: User, target_date: Optio
     quests = quests[:max_quests]
     
     daily_quests = []
+    phase = stat_cap.phase if stat_cap else 1
     for q in quests:
-        exp = calculate_quest_exp(difficulty, q["quest_type"], level, q.get("base_exp"))
+        exp = calculate_quest_exp(difficulty, q["quest_type"], level, q.get("base_exp"), phase)
         
         # Scale stat rewards based on the new logic
         stat_rewards = q.get("stat_rewards", {})
         scaled_stat_rewards = {}
         for stat_name, val in stat_rewards.items():
             base_gain = float(val)
-            scaled_gain = calculate_stat_gain(base_gain, difficulty, overall_streak, level)
+            scaled_gain = calculate_stat_gain(base_gain, difficulty, overall_streak, level, phase)
             scaled_stat_rewards[stat_name] = max(1, int(round(scaled_gain)))
 
         dq = DailyQuest(
@@ -250,15 +251,16 @@ async def refresh_daily_quests(db: AsyncSession, user: User, target_date: Option
     streaks = await _get_streaks(db, user.id)
     overall_streak = _get_overall_streak(streaks)
 
+    phase = stat_cap.phase if stat_cap else 1
     for q in new_quest_data:
-        exp = calculate_quest_exp(difficulty, q["quest_type"], level, q.get("base_exp"))
+        exp = calculate_quest_exp(difficulty, q["quest_type"], level, q.get("base_exp"), phase)
         exp = int(exp * 1.2)
         
         stat_rewards = q.get("stat_rewards", {})
         scaled_stat_rewards = {}
         for stat_name, val in stat_rewards.items():
             base_gain = float(val)
-            scaled_gain = calculate_stat_gain(base_gain, difficulty, overall_streak, level)
+            scaled_gain = calculate_stat_gain(base_gain, difficulty, overall_streak, level, phase)
             scaled_stat_rewards[stat_name] = max(1, int(round(scaled_gain)))
         
         dq = DailyQuest(
@@ -643,12 +645,14 @@ async def reroll_daily_quest(db: AsyncSession, user: User, quest_id: uuid.UUID) 
     streaks = await _get_streaks(db, user.id)
     overall_streak = _get_overall_streak(streaks)
     
+    phase = stat_cap.phase if stat_cap else 1
+    
     # Update stats scalar
     stat_rewards = q.get("stat_rewards", {})
     scaled_stat_rewards = {}
     for stat_name, val in stat_rewards.items():
         base_gain = float(val)
-        scaled_gain = calculate_stat_gain(base_gain, old_quest.difficulty, overall_streak, level)
+        scaled_gain = calculate_stat_gain(base_gain, old_quest.difficulty, overall_streak, level, phase)
         scaled_stat_rewards[stat_name] = max(1, int(round(scaled_gain)))
         
     old_quest.title_vi = q["title_vi"]
@@ -663,7 +667,7 @@ async def reroll_daily_quest(db: AsyncSession, user: User, quest_id: uuid.UUID) 
     old_quest.stat_rewards = json.dumps(scaled_stat_rewards)
     
     # Re-calculate EXP dynamically
-    exp = calculate_quest_exp(old_quest.difficulty, old_quest.quest_type, level, q.get("base_exp"))
+    exp = calculate_quest_exp(old_quest.difficulty, old_quest.quest_type, level, q.get("base_exp"), phase)
     old_quest.exp_reward = exp
     
     await db.flush()

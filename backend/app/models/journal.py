@@ -17,6 +17,8 @@ class Reflection(Base):
     insights = Column(Text, default="")
     success_reasons = Column(Text, default="")
     fail_reasons = Column(Text, default="")
+    breakthrough_trial_id = Column(UUID(as_uuid=True), ForeignKey("breakthrough_trials.id"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="reflections")
+    breakthrough_trial = relationship("BreakthroughTrial", back_populates="reflections")

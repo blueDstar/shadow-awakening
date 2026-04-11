@@ -12,6 +12,24 @@
   }
 }
 
+.journal-ritual-alert {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba($neon-gold, 0.1);
+  border: 1px solid rgba($neon-gold, 0.3);
+  padding: 15px 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
+  .icon { font-size: 1.5rem; }
+  .text {
+    strong { display: block; color: $neon-gold; margin-bottom: 3px; font-size: 1.1rem; }
+    p { margin: 0; font-size: 0.9rem; color: rgba(white, 0.7); }
+  }
+}
+
 .journal-form {
   @include card(false);
   margin-bottom: $space-8;

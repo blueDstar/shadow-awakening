@@ -78,6 +78,7 @@ export const breakthroughService = USE_MOCK ? {
 } : {
   getStatus: () => api.get('/api/breakthrough/status'),
   start: () => api.post('/api/breakthrough/start'),
+  selectOption: (optionId) => api.post('/api/breakthrough/select-option', null, { params: { option_id: optionId } }),
   complete: () => api.post('/api/breakthrough/complete'),
 };
 
@@ -125,11 +126,7 @@ export const profileService = {
   uploadImage: (type, file) => {
     const formData = new FormData();
     formData.append('file', file);
-    return api.post(`/api/profile/upload/${type}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    return api.post(`/api/profile/upload/${type}`, formData);
   },
   getProfile: () => api.get('/api/profile/me'),
 };

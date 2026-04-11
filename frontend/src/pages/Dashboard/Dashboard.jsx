@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { dashboardService, questService } from '../../services/apiServices';
+import BreakthroughModal from '../../components/modals/BreakthroughModal/BreakthroughModal';
 import './Dashboard.scss';
 
 const STAT_COLORS = {
@@ -27,6 +28,7 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [countdown, setCountdown] = useState(0);
+  const [isBreakthroughOpen, setIsBreakthroughOpen] = useState(false);
 
   useEffect(() => {
     loadDashboard();
@@ -105,7 +107,7 @@ export default function Dashboard() {
       >
         <div className="shadow-fire-bg" />
         <div className="character-info">
-          <div className="character-info__avatar">
+          <div className={`character-info__avatar aura-${data.aura || 'basic'}`}>
             <div className="character-info__avatar-glow" />
             <img 
               src={data.avatar_url || '/main_app_logo_1024.png'} 
@@ -210,7 +212,12 @@ export default function Dashboard() {
         >
           <h3>{t('stats.title')}</h3>
           {data.breakthrough_available && (
-            <div className="breakthrough-alert">⚡ {t('stats.breakthroughAvailable')}</div>
+            <div 
+              className="breakthrough-alert clickable"
+              onClick={() => setIsBreakthroughOpen(true)}
+            >
+              ⚡ {t('stats.breakthroughAvailable')}
+            </div>
           )}
           <div className="stats-grid">
             {coreStats.map((stat, i) => (
@@ -242,6 +249,15 @@ export default function Dashboard() {
           </div>
         </motion.div>
       </div>
+      {/* Breakthrough Ritual Modal */}
+      <BreakthroughModal 
+        isOpen={isBreakthroughOpen}
+        onClose={() => setIsBreakthroughOpen(false)}
+        onComplete={(res) => {
+          loadDashboard();
+          // Optional: Trigger a celebration effect
+        }}
+      />
     </div>
   );
 }

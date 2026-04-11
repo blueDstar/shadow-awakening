@@ -7,6 +7,7 @@ from app.models import User
 from app.services.breakthrough_service import (
     get_breakthrough_status,
     start_breakthrough,
+    select_ritual_option,
     complete_breakthrough,
 )
 
@@ -39,5 +40,15 @@ async def complete(
 ):
     try:
         return await complete_breakthrough(db, user.id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+@router.post("/select-option")
+async def select_option(
+    option_id: str,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        return await select_ritual_option(db, user.id, option_id)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

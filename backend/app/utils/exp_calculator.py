@@ -24,9 +24,9 @@ def check_level_up(current_level: int, current_exp: int) -> tuple:
     return current_level, current_exp, False
 
 
-def calculate_quest_exp(difficulty: int, quest_type: str, level: int, base_exp: int = None) -> int:
+def calculate_quest_exp(difficulty: int, quest_type: str, level: int, base_exp: int = None, phase: int = 1) -> int:
     """Calculate EXP reward for a quest based on difficulty and type.
-    Scales heavily with level to meet the rising level bounds.
+    Scales heavily with level and phase.
     """
     if base_exp is None:
         base_exp_dict = {
@@ -42,15 +42,15 @@ def calculate_quest_exp(difficulty: int, quest_type: str, level: int, base_exp: 
     else:
         base = base_exp
         
-    return int(base * (1 + difficulty * 0.15) * (1 + level * 0.05))
+    phase_multiplier = 1.2 ** (phase - 1)
+    return int(base * (1 + difficulty * 0.15) * (1 + level * 0.05) * phase_multiplier)
 
 
-def calculate_stat_gain(base_gain: float, difficulty: int, streak: int, level: int = 1) -> float:
-    """Calculate stat gain with difficulty and streak bonuses.
-    Stats scale gracefully with character level.
-    """
+def calculate_stat_gain(base_gain: float, difficulty: int, streak: int, level: int = 1, phase: int = 1) -> float:
+    """Calculate stat gain with difficulty, streak, and phase bonuses."""
     # max +50% from streak
     streak_bonus = 1 + min(streak * 0.02, 0.5)  
     difficulty_bonus = 1 + difficulty * 0.1
     level_bonus = 1 + level * 0.03
-    return round(float(base_gain) * difficulty_bonus * streak_bonus * level_bonus, 2)
+    phase_multiplier = 1.2 ** (phase - 1)
+    return round(float(base_gain) * difficulty_bonus * streak_bonus * level_bonus * phase_multiplier, 2)

@@ -173,6 +173,42 @@
 
   &__avatar {
     position: relative;
+    
+    &.aura-blue_glow {
+      box-shadow: 0 0 15px $neon-blue, 0 0 30px rgba($neon-blue, 0.4);
+      &::after {
+        content: '';
+        position: absolute;
+        top: -5px; left: -5px; right: -5px; bottom: -5px;
+        border-radius: 50%;
+        box-shadow: 0 0 20px $neon-blue;
+        animation: pulse-glow 2s infinite ease-in-out;
+      }
+    }
+    
+    &.aura-dark_fire {
+      box-shadow: 0 0 15px #ff4d00, 0 0 30px rgba(#ff4d00, 0.4);
+      &::after {
+        content: '';
+        position: absolute;
+        top: -5px; left: -5px; right: -5px; bottom: -5px;
+        border-radius: 50%;
+        box-shadow: 0 0 20px #ff4d00;
+        animation: pulse-glow 2s infinite ease-in-out;
+      }
+    }
+
+    &.aura-golden_aura {
+      box-shadow: 0 0 15px $neon-gold, 0 0 30px rgba($neon-gold, 0.4);
+      &::after {
+        content: '';
+        position: absolute;
+        top: -5px; left: -5px; right: -5px; bottom: -5px;
+        border-radius: 50%;
+        box-shadow: 0 0 20px $neon-gold;
+        animation: pulse-glow 2s infinite ease-in-out;
+      }
+    }
     width: 80px;
     height: 80px;
     display: flex;
@@ -390,15 +426,30 @@
 
 // Stats
 .breakthrough-alert {
-  background: linear-gradient(135deg, rgba($neon-purple, 0.1), rgba($neon-gold, 0.1));
+  background: rgba($neon-gold, 0.1);
   border: 1px solid rgba($neon-gold, 0.3);
-  padding: $space-3 $space-4;
-  border-radius: $radius-md;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
   color: $neon-gold;
-  font-weight: $font-weight-semibold;
-  font-size: $font-sm;
-  margin-bottom: $space-4;
-  animation: pulseGlow 2s infinite;
+  font-weight: bold;
+  margin-bottom: 20px;
+  animation: pulse-glow 2s infinite;
+
+  &.clickable {
+    cursor: pointer;
+    transition: all 0.3s;
+    &:hover {
+      background: rgba($neon-gold, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba($neon-gold, 0.2);
+    }
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
 }
 
 .stats-grid {

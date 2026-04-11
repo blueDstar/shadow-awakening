@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { journalService } from '../../services/apiServices';
+import { journalService, breakthroughService } from '../../services/apiServices';
 import './Journal.scss';
 
 const MOODS = ['great', 'good', 'neutral', 'bad', 'terrible'];
@@ -14,8 +14,21 @@ export default function Journal() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [activeRitual, setActiveRitual] = useState(null);
 
-  useEffect(() => { loadEntries(); }, []);
+  useEffect(() => { 
+    loadEntries(); 
+    checkBreakthrough();
+  }, []);
+
+  const checkBreakthrough = async () => {
+    try {
+      const res = await breakthroughService.getStatus();
+      if (res.data?.active_trial) {
+        setActiveRitual(res.data);
+      }
+    } catch (err) { console.error(err); }
+  };
 
   const loadEntries = async () => {
     try {
@@ -29,7 +42,11 @@ export default function Journal() {
     if (!form.content.trim()) return;
     setSaving(true);
     try {
-      await journalService.create(form);
+      const payload = {
+        ...form,
+        breakthrough_trial_id: activeRitual?.active_trial?.id
+      };
+      await journalService.create(payload);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
       setForm({ content: '', mood: 'neutral', insights: '', success_reasons: '', fail_reasons: '' });
@@ -41,6 +58,20 @@ export default function Journal() {
   return (
     <div className="journal-page">
       <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t('journal.title')}</motion.h1>
+
+      {activeRitual && (
+        <motion.div 
+          className="journal-ritual-alert"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <span className="icon">✨</span>
+          <div className="text">
+            <strong>{activeRitual.ritual_template.title_vi}</strong>
+            <p>Hãy viết bài tổng kết tối thiểu {activeRitual.ritual_template.min_reflection} từ để hoàn tất nghi thức.</p>
+          </div>
+        </motion.div>
+      )}
 
       <motion.div className="journal-form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <div className="journal-form__mood">
