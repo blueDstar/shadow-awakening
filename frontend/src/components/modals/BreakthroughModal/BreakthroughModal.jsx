@@ -30,8 +30,22 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
 
   const handleStart = async () => {
     try {
-      await breakthroughService.start();
-      loadStatus();
+      const res = await breakthroughService.start();
+      if (res.data && res.data.trial_id) {
+        // Immediate update to local state to prevent loading screen
+        setData({
+          ...data,
+          available: false,
+          active_trial: {
+            id: res.data.trial_id,
+            status: 'in_progress',
+            progress: {}
+          },
+          ritual_template: res.data.ritual
+        });
+      } else {
+        loadStatus();
+      }
     } catch (err) {
       alert(err.response?.data?.detail || 'Failed to start ritual');
     }
