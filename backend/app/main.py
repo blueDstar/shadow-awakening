@@ -1,24 +1,33 @@
+from contextlib import asynccontextmanager
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
+from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.db.database import init_db
 from app.routes import (
-    auth, quests, dashboard, stats, streaks, 
-    breakthrough, journal, settings as settings_routes,
-    skills, challenges, rewards, profile
+    auth,
+    breakthrough,
+    challenges,
+    dashboard,
+    journal,
+    profile,
+    quests,
+    rewards,
+    settings as settings_routes,
+    skills,
+    stats,
+    streaks,
 )
-from fastapi.staticfiles import StaticFiles
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
     await init_db()
     print("🌑 Shadow Awakening API is rising...")
     yield
-    # Shutdown
     print("🌑 Shadow Awakening API is shutting down...")
 
 
@@ -29,7 +38,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
@@ -38,7 +46,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
 app.include_router(auth.router)
 app.include_router(dashboard.router)
 app.include_router(quests.router)
@@ -48,15 +55,13 @@ app.include_router(breakthrough.router)
 app.include_router(journal.router)
 app.include_router(settings_routes.router)
 app.include_router(skills.router)
+app.include_router(challenges.router)
 app.include_router(rewards.router)
 app.include_router(profile.router)
 
-# Mount static files with absolute path
-from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_DIR = BASE_DIR / "static"
 STATIC_DIR.mkdir(parents=True, exist_ok=True)
-
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
