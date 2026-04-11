@@ -28,7 +28,9 @@ async def start(
     db: AsyncSession = Depends(get_db),
 ):
     try:
-        return await start_breakthrough(db, user.id)
+        res = await start_breakthrough(db, user.id)
+        await db.commit()
+        return res
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -39,7 +41,9 @@ async def complete(
     db: AsyncSession = Depends(get_db),
 ):
     try:
-        return await complete_breakthrough(db, user.id)
+        res = await complete_breakthrough(db, user.id)
+        await db.commit()
+        return res
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 @router.post("/select-option")
@@ -49,6 +53,8 @@ async def select_option(
     db: AsyncSession = Depends(get_db),
 ):
     try:
-        return await select_ritual_option(db, user.id, option_id)
+        res = await select_ritual_option(db, user.id, option_id)
+        await db.commit()
+        return res
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

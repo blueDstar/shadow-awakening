@@ -95,29 +95,29 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
                   {t('breakthrough.start')}
                 </button>
               </div>
-            ) : trial ? (
+            ) : trial && ritual ? (
               <div className="ritual-progress">
                 {/* Foundation */}
                 <section className="ritual-section">
                   <h4><span className="icon">🛡️</span> {t('breakthrough.foundation')}</h4>
                   <div className="requirement-item">
-                    <span>{t(`breakthrough.req.${ritual.foundation.type}`)}: {ritual.foundation.target} {t('streak.days')}</span>
-                    <span className="status">{trial.progress.streak >= ritual.foundation.target ? '✅' : '⏳'}</span>
+                    <span>{t(`breakthrough.req.${ritual.foundation?.type || 'streak'}`)}: {ritual.foundation?.target || 0} {t('streak.days')}</span>
+                    <span className="status">{(trial.progress?.streak || 0) >= (ritual.foundation?.target || 0) ? '✅' : '⏳'}</span>
                   </div>
                 </section>
 
                 {/* Mandatory */}
                 <section className="ritual-section">
                   <h4><span className="icon">⚔️</span> {t('breakthrough.mandatory')}</h4>
-                  {ritual.mandatory.map((req, i) => (
+                  {ritual.mandatory?.map((req, i) => (
                     <div key={i} className="requirement-item">
-                      <span>{t(`breakthrough.req.${req.type}`)}: {trial.progress[req.type] || 0}/{req.target}</span>
-                      <span className="status">{(trial.progress[req.type] || 0) >= req.target ? '✅' : '⏳'}</span>
+                      <span>{t(`breakthrough.req.${req.type}`)}: {trial.progress?.[req.type] || 0}/{req.target}</span>
+                      <span className="status">{(trial.progress?.[req.type] || 0) >= req.target ? '✅' : '⏳'}</span>
                     </div>
                   ))}
                   <div className="requirement-item">
                     <span>{t('breakthrough.reflectionAtJournal')}</span>
-                    <span className="status">{trial.progress.reflection_done ? '✅' : '📝'}</span>
+                    <span className="status">{trial.progress?.reflection_done ? '✅' : '📝'}</span>
                   </div>
                 </section>
 
@@ -125,14 +125,14 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
                 <section className="ritual-section">
                   <h4><span className="icon">🌟</span> {t('breakthrough.optionalPaths')}</h4>
                   <div className="options-grid">
-                    {ritual.options.map((opt) => (
+                    {ritual.options?.map((opt) => (
                       <div 
                         key={opt.id} 
                         className={`option-card ${trial.selected_option_id === opt.id ? 'active' : ''}`}
                         onClick={() => !trial.selected_option_id && handleSelectOption(opt.id)}
                       >
                         <h5>{isVi ? opt.label_vi : opt.label_en}</h5>
-                        <p>{t(`breakthrough.req.${opt.req.type}`)}: {opt.req.target}</p>
+                        <p>{t(`breakthrough.req.${opt.req?.type}`)}: {opt.req?.target}</p>
                         {trial.selected_option_id === opt.id && <div className="selected-mark">{t('breakthrough.selected')}</div>}
                       </div>
                     ))}
@@ -146,6 +146,11 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
                 >
                   {submitting ? t('breakthrough.selecting') : t('breakthrough.complete')}
                 </button>
+              </div>
+            ) : trial && !ritual ? (
+              <div className="loading-ritual-data">
+                <div className="loading-spinner" />
+                <p>Đang chuẩn bị nghi thức...</p>
               </div>
             ) : (
               <div className="not-available">
