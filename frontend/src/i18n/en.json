@@ -180,6 +180,26 @@
     "available": "Breakthrough is ready!",
     "start": "Start Breakthrough",
     "complete": "Complete Breakthrough",
-    "capIncrease": "Stat cap increased from {{from}} to {{to}}"
+    "capIncrease": "Stat cap increased from {{from}} to {{to}}",
+    "req": {
+      "streak": "Consecutive Day Streak",
+      "habit_count": "Habits Completed",
+      "confidence_count": "Confidence Quests",
+      "reflection_count": "Reflection Entries",
+      "wisdom_count": "Wisdom Quests",
+      "fitness_count": "Fitness Quests",
+      "deep_work_hours": "Deep Work Hours",
+      "wisdom_focus_count": "Deep Research",
+      "book_completed": "Books Read",
+      "skill_module_completed": "Skills Mastered",
+      "workout_sessions": "Workout Sessions",
+      "meditation_minutes": "Meditation Minutes",
+      "new_conversations": "New Conversations",
+      "public_questions": "Public Questions",
+      "no_fail_focus_7d": "7-Day No-Fail Focus",
+      "mentoring_sessions": "Mentoring Sessions",
+      "major_goal_completed": "Major Goals Achieved",
+      "public_presentation": "Public Presentations"
+    }
   }
 }

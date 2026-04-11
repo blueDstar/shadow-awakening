@@ -86,7 +86,7 @@ export default function BreakthroughModal({ isOpen, onClose, onComplete }) {
             ) : isAvailable ? (
               <div className="start-phase">
                 <div className="ritual-preview">
-                  <div className={`aura-preview ${ritual?.aura_name}`} />
+                  <div className={`aura-preview aura-${ritual?.aura_name}`} />
                   <h3>Giai đoạn {data.next_phase}: {ritual?.title_vi}</h3>
                   <p>Mở rộng giới hạn chỉ số lên 20%. Bạn sẽ giữ lại 30% sức mạnh hiện tại để bước vào cảnh giới mới.</p>
                 </div>

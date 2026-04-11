@@ -38,7 +38,8 @@
       font-size: 1.5rem;
       background: linear-gradient(to right, $neon-gold, #ffefad);
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
@@ -184,9 +185,9 @@
         animation: pulse-aura 3s infinite;
       }
 
-      &.blue_glow::after { background: $neon-blue; box-shadow: 0 0 30px $neon-blue; }
-      &.dark_fire::after { background: #ff4d00; box-shadow: 0 0 30px #ff4d00; }
-      &.golden_aura::after { background: $neon-gold; box-shadow: 0 0 30px $neon-gold; }
+      &.aura-blue_glow::after { background: $neon-blue; box-shadow: 0 0 30px $neon-blue; }
+      &.aura-dark_fire::after { background: #ff4d00; box-shadow: 0 0 30px #ff4d00; }
+      &.aura-golden_aura::after { background: $neon-gold; box-shadow: 0 0 30px $neon-gold; }
     }
     
     h3 { font-size: 1.8rem; margin: 0 0 15px 0; color: white; }

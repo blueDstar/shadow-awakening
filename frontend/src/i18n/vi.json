@@ -180,6 +180,26 @@
     "available": "Đột phá đã sẵn sàng!",
     "start": "Bắt Đầu Đột Phá",
     "complete": "Hoàn Thành Đột Phá",
-    "capIncrease": "Giới hạn tăng từ {{from}} lên {{to}}"
+    "capIncrease": "Giới hạn tăng từ {{from}} lên {{to}}",
+    "req": {
+      "streak": "Chuỗi ngày liên tiếp",
+      "habit_count": "Số lượng Habit hoàn thành",
+      "confidence_count": "Nhiệm vụ Tự tin",
+      "reflection_count": "Bài viết Reflection",
+      "wisdom_count": "Nhiệm vụ Trí tuệ",
+      "fitness_count": "Nhiệm vụ Thể lực",
+      "deep_work_hours": "Giờ Deep Work",
+      "wisdom_focus_count": "Nghiên cứu sâu",
+      "book_completed": "Đọc xong sách",
+      "skill_module_completed": "Hoàn thành kỹ năng",
+      "workout_sessions": "Buổi tập luyện",
+      "meditation_minutes": "Phút thiền định",
+      "new_conversations": "Cuộc trò chuyện mới",
+      "public_questions": "Câu hỏi công khai",
+      "no_fail_focus_7d": "7 ngày không fail Focus",
+      "mentoring_sessions": "Buổi dẫn dắt",
+      "major_goal_completed": "Mục tiêu lớn hoàn thành",
+      "public_presentation": "Thuyết trình công khai"
+    }
   }
 }

@@ -42,7 +42,7 @@ def calculate_quest_exp(difficulty: int, quest_type: str, level: int, base_exp: 
     else:
         base = base_exp
         
-    phase_multiplier = 1.2 ** (phase - 1)
+    phase_multiplier = 1.2 ** phase
     return int(base * (1 + difficulty * 0.15) * (1 + level * 0.05) * phase_multiplier)
 
 
@@ -52,5 +52,5 @@ def calculate_stat_gain(base_gain: float, difficulty: int, streak: int, level: i
     streak_bonus = 1 + min(streak * 0.02, 0.5)  
     difficulty_bonus = 1 + difficulty * 0.1
     level_bonus = 1 + level * 0.03
-    phase_multiplier = 1.2 ** (phase - 1)
+    phase_multiplier = 1.2 ** phase
     return round(float(base_gain) * difficulty_bonus * streak_bonus * level_bonus * phase_multiplier, 2)

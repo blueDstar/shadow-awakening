@@ -7,7 +7,7 @@ from app.models.skill import Skill, UserSkill
 from app.models.challenge import Challenge, UserChallenge
 from app.models.journal import Reflection
 from app.models.planner import PlannerBlock
-from app.models.breakthrough import BreakthroughTrial, ExperienceLog, UserSettings
+from app.models.breakthrough import BreakthroughTrial, BreakthroughRitual, ExperienceLog, UserSettings
 
 __all__ = [
     "User", "UserProfile",
@@ -19,5 +19,5 @@ __all__ = [
     "Challenge", "UserChallenge",
     "Reflection",
     "PlannerBlock",
-    "BreakthroughTrial", "ExperienceLog", "UserSettings",
+    "BreakthroughTrial", "BreakthroughRitual", "ExperienceLog", "UserSettings",
 ]

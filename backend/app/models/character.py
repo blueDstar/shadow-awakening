@@ -34,7 +34,7 @@ class StatCap(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     character_id = Column(UUID(as_uuid=True), ForeignKey("characters.id"), nullable=False, unique=True)
     current_cap = Column(Integer, default=100)
-    phase = Column(Integer, default=1)
+    phase = Column(Integer, default=0)
     breakthrough_available = Column(Boolean, default=False)
 
     character = relationship("Character", back_populates="stat_cap")
