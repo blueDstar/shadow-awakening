@@ -129,4 +129,6 @@ export const profileService = {
     return api.post(`/api/profile/upload/${type}`, formData);
   },
   getProfile: () => api.get('/api/profile/me'),
+  getAssets: () => api.get('/api/profile/assets'),
+  setAsset: (type, path) => api.post('/api/profile/set-asset', { asset_type: type, asset_path: path }),
 };

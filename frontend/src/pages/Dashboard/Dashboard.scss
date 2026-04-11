@@ -21,6 +21,44 @@
   }
 }
 
+.dashboard-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  text-align: center;
+  padding: $space-8;
+
+  .error-content {
+    @include card(false);
+    max-width: 450px;
+    border-color: rgba($danger, 0.3);
+    
+    h2 {
+      color: $danger;
+      margin-bottom: $space-4;
+    }
+
+    p {
+      color: $text-secondary;
+      margin-bottom: $space-6;
+      line-height: $line-height-relaxed;
+    }
+
+    .retry-btn {
+      @include button-ghost;
+      color: $text-primary;
+      border-color: $danger;
+      
+      &:hover {
+        background: rgba($danger, 0.1);
+        border-color: $danger;
+        box-shadow: 0 0 15px rgba($danger, 0.3);
+      }
+    }
+  }
+}
+
 .dashboard {
   max-width: $content-max-width;
   margin: 0 auto;

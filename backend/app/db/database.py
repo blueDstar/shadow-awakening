@@ -22,6 +22,30 @@ async def get_db():
             await session.close()
 
 
+from sqlalchemy import text
+
+
+async def sync_database_schema():
+    """Automatically add missing columns to prevent crashes on production."""
+    async with engine.begin() as conn:
+        try:
+            # Characters table: Add image URLs
+            await conn.execute(text("ALTER TABLE characters ADD COLUMN IF NOT EXISTS avatar_url VARCHAR"))
+            await conn.execute(text("ALTER TABLE characters ADD COLUMN IF NOT EXISTS cover_url VARCHAR"))
+            await conn.execute(text("ALTER TABLE characters ADD COLUMN IF NOT EXISTS background_url VARCHAR"))
+            
+            # StatCaps table: Ensure it exists (create_all will do this, but just in case)
+            # BreakthroughRituals table: ensure primary key is UUID
+            
+            print("🌑 Database schema synchronized successfully.")
+        except Exception as e:
+            print(f"🌑 Database sync warning: {e}")
+
+
 async def init_db():
+    # Create missing tables
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    
+    # Sync columns
+    await sync_database_schema()

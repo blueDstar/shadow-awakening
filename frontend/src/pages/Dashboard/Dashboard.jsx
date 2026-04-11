@@ -73,7 +73,19 @@ export default function Dashboard() {
     );
   }
 
-  if (!data) return null;
+  if (!data) {
+    return (
+      <div className="dashboard-error">
+        <div className="error-content">
+          <h2>🚫 {t('common.error') || 'Shadow Connection Lost'}</h2>
+          <p>Hệ thống không thể kết nối tới cơ sở dữ liệu. Vui lòng thử lại hoặc liên hệ quản trị viên.</p>
+          <button className="retry-btn" onClick={() => { setLoading(true); loadDashboard(); }}>
+            🔄 Thử lại
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 

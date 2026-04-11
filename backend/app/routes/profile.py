@@ -1,16 +1,15 @@
 import os
 import uuid
-import shutil
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from pydantic import BaseModel
+from pathlib import Path
 
 from app.db.database import get_db
 from app.core.deps import get_current_user
 from app.models import User, Character
 from app.schemas.character import CharacterResponse
-
-from pathlib import Path
 
 router = APIRouter(prefix="/api/profile", tags=["profile"])
 
@@ -18,7 +17,56 @@ router = APIRouter(prefix="/api/profile", tags=["profile"])
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 UPLOAD_DIR = BASE_DIR / "static" / "uploads"
 
+class AssetSelection(BaseModel):
+    asset_type: str  # avatar, cover, background
+    asset_path: str  # e.g. /avatar/avatar_male_1.png
+
+@router.get("/assets")
+async def get_available_assets():
+    """List available pre-defined assets for profile."""
+    # These are relative to frontend's public folder
+    avatars = [
+        "/avatar/avatar_female_1.png", "/avatar/avatar_female_2.png", "/avatar/avatar_female_3.png", 
+        "/avatar/avatar_female_4.png", "/avatar/avatar_female_5.png",
+        "/avatar/avatar_male_1.png", "/avatar/avatar_male_2.png", "/avatar/avatar_male_3.png", 
+        "/avatar/avatar_male_4.png", "/avatar/avatar_male_5.png"
+    ]
+    backgrounds = [
+        "/background/banner_male_3.png", "/background/banner_male_4.png"
+    ]
+    return {
+        "avatars": avatars,
+        "backgrounds": backgrounds,
+        "covers": backgrounds # Using backgrounds as covers for now
+    }
+
+@router.post("/set-asset")
+async def set_profile_asset(
+    selection: AssetSelection,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if selection.asset_type not in ["avatar", "cover", "background"]:
+        raise HTTPException(status_code=400, detail="Invalid asset type")
+
+    result = await db.execute(select(Character).where(Character.user_id == user.id))
+    character = result.scalar_one_or_none()
+    
+    if not character:
+        raise HTTPException(status_code=404, detail="Character not found")
+
+    if selection.asset_type == "avatar":
+        character.avatar_url = selection.asset_path
+    elif selection.asset_type == "cover":
+        character.cover_url = selection.asset_path
+    elif selection.asset_type == "background":
+        character.background_url = selection.asset_path
+
+    await db.commit()
+    return {"status": "success", "url": selection.asset_path}
+
 @router.post("/upload/{img_type}")
+# ... (existing upload code)
 async def upload_profile_image(
     img_type: str,
     file: UploadFile = File(...),

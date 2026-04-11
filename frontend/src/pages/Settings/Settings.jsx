@@ -10,15 +10,17 @@ export default function Settings() {
   const { user, logout } = useAuth();
   const [settings, setSettings] = useState({ language: 'vi', timezone: 'Asia/Ho_Chi_Minh' });
   const [profile, setProfile] = useState(null);
-  const [uploading, setUploading] = useState(null);
-
-  const avatarInput = useRef();
-  const coverInput = useRef();
-  const bgInput = useRef();
+  const [loadingAssets, setLoadingAssets] = useState(false);
+  const [assets, setAssets] = useState({ avatars: [], backgrounds: [], covers: [] });
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [galleryType, setGalleryType] = useState(null);
 
   useEffect(() => {
     settingsService.get().then(res => setSettings(res.data)).catch(console.error);
     profileService.getProfile().then(res => setProfile(res.data)).catch(console.error);
+    
+    // Fetch assets list once
+    profileService.getAssets().then(res => setAssets(res.data)).catch(console.error);
   }, []);
 
   const handleLanguageChange = async (lang) => {
@@ -30,21 +32,20 @@ export default function Settings() {
     } catch (err) { console.error(err); }
   };
 
-  const handleFileUpload = async (e, type) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const openGallery = (type) => {
+    setGalleryType(type);
+    setGalleryOpen(true);
+  };
 
-    setUploading(type);
+  const handleAssetSelect = async (path) => {
     try {
-      const res = await profileService.uploadImage(type, file);
-      setProfile({ ...profile, [`${type}_url`]: res.data.url });
-      // Reload page or update context if needed
-      window.location.reload(); // Quickest way to sync globally for now
+      await profileService.setAsset(galleryType, path);
+      setProfile({ ...profile, [`${galleryType}_url`]: path });
+      setGalleryOpen(false);
+      // Optional: global notification
     } catch (err) {
-      console.error(`Upload ${type} failed:`, err);
-      alert(t('common.error') || 'Upload failed');
-    } finally {
-      setUploading(false);
+      console.error('Failed to set asset:', err);
+      alert(t('common.error') || 'Failed to update profile');
     }
   };
 
@@ -61,36 +62,61 @@ export default function Settings() {
             <label>{t('profile.avatar') || 'Ảnh đại diện'}</label>
             <div className="preview-box avatar-preview">
               <img src={profile?.avatar_url || '/main_app_logo_1024.png'} alt="Avatar" />
-              <button onClick={() => avatarInput.current.click()} disabled={uploading === 'avatar'}>
-                {uploading === 'avatar' ? '...' : (t('common.change') || 'Thay đổi')}
+              <button onClick={() => openGallery('avatar')}>
+                {t('common.change') || 'Thay đổi'}
               </button>
             </div>
-            <input type="file" ref={avatarInput} onChange={(e) => handleFileUpload(e, 'avatar')} hidden accept="image/*" />
           </div>
 
           {/* Cover */}
           <div className="profile-edit-item">
             <label>{t('profile.cover') || 'Ảnh bìa'}</label>
             <div className="preview-box cover-preview" style={{ backgroundImage: `url(${profile?.cover_url})` }}>
-              <button onClick={() => coverInput.current.click()} disabled={uploading === 'cover'}>
-                {uploading === 'cover' ? '...' : (t('common.change') || 'Thay đổi')}
+              <button onClick={() => openGallery('cover')}>
+                {t('common.change') || 'Thay đổi'}
               </button>
             </div>
-            <input type="file" ref={coverInput} onChange={(e) => handleFileUpload(e, 'cover')} hidden accept="image/*" />
           </div>
 
           {/* Background */}
           <div className="profile-edit-item">
             <label>{t('profile.background') || 'Hình nền'}</label>
             <div className="preview-box bg-preview" style={{ backgroundImage: `url(${profile?.background_url})` }}>
-              <button onClick={() => bgInput.current.click()} disabled={uploading === 'background'}>
-                {uploading === 'background' ? '...' : (t('common.change') || 'Thay đổi')}
+              <button onClick={() => openGallery('background')}>
+                {t('common.change') || 'Thay đổi'}
               </button>
             </div>
-            <input type="file" ref={bgInput} onChange={(e) => handleFileUpload(e, 'background')} hidden accept="image/*" />
           </div>
         </div>
       </motion.div>
+
+      {/* Gallery Modal */}
+      {galleryOpen && (
+        <div className="gallery-overlay" onClick={() => setGalleryOpen(false)}>
+          <motion.div 
+            className="gallery-modal" 
+            onClick={e => e.stopPropagation()}
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+          >
+            <div className="gallery-header">
+              <h3>{t(`profile.${galleryType}`) || galleryType}</h3>
+              <button className="close-btn" onClick={() => setGalleryOpen(false)}>×</button>
+            </div>
+            <div className="gallery-grid">
+              {assets[`${galleryType}s`]?.map((path) => (
+                <div 
+                  key={path} 
+                  className={`gallery-item ${profile[`${galleryType}_url`] === path ? 'active' : ''}`}
+                  onClick={() => handleAssetSelect(path)}
+                >
+                  <img src={path} alt="Asset" />
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       <motion.div className="settings-section" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
         <h3>{t('settings.language')}</h3>
